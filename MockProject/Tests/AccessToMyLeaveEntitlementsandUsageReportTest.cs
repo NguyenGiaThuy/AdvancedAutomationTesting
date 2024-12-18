@@ -17,12 +17,14 @@ public class AccessToMyLeaveEntitlementsandUsageReportTest : TestBase
 
         // Navigate to the My Leave Entitlements and Usage Report item
         // in the dropdown menu in topbar
-        _webDriver.FindElement(
-            By.XPath("//a[text()='My Leave Entitlements and Usage Report']/..")).Click();
+        _webDriver
+            .FindElement(By.XPath("//a[text()='My Leave Entitlements and Usage Report']/.."))
+            .Click();
 
         // Verify that the My Leave Entitlements and Usage Report h5 tag is in the page
-        var actual = _webDriver.FindElement(
-            By.XPath("//h5[text()='My Leave Entitlements and Usage Report']"));
-        Assert.IsNotNull(actual);
+        var h5 = _webDriver.FindElement(
+            By.XPath("//h5[text()='My Leave Entitlements and Usage Report']")
+        );
+        Assert.IsNotNull(h5);
     }
 }

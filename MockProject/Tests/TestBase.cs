@@ -1,5 +1,3 @@
-using OpenQA.Selenium.BiDi.Modules.BrowsingContext;
-
 namespace MockProject.Tests;
 
 [TestClass]
@@ -12,33 +10,45 @@ public class TestBase
     [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
     public static void ClassPrecondition(TestContext testContext)
     {
-        var explicitTimeout = int.Parse(TestAssembly.Configuration["TestSettings:ExplicitTimeout"]!);
-        var implicitTimeout = int.Parse(TestAssembly.Configuration["TestSettings:ImplicitTimeout"]!);
-        var pageLoadTimeout = int.Parse(TestAssembly.Configuration["TestSettings:pageLoadTimeout"]!);
+        var explicitTimeout = int.Parse(
+            TestAssembly.Configuration["TestSettings:ExplicitTimeout"]!
+        );
+        var implicitTimeout = int.Parse(
+            TestAssembly.Configuration["TestSettings:ImplicitTimeout"]!
+        );
 
         _testContext = testContext;
-        _testContext.WriteLine($"Class precondition runs in {_testContext.FullyQualifiedTestClassName}");
+        _testContext.WriteLine(
+            $"Class precondition runs in {_testContext.FullyQualifiedTestClassName}"
+        );
 
         try
         {
             new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig());
             _webDriver = new FirefoxDriver();
-            _webDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(pageLoadTimeout);
-            _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(implicitTimeout);
-
-            _wait = new WebDriverWait(_webDriver, TimeSpan.FromSeconds(explicitTimeout));
+            _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(
+                implicitTimeout
+            );
+            _wait = new WebDriverWait(_webDriver, TimeSpan.FromMilliseconds(explicitTimeout));
 
             // Navigate to the site
-            _webDriver.Navigate().GoToUrl("https://opensource-demo.orangehrmlive.com");
+            var loginPage = new LoginPage(
+                _webDriver,
+                _wait,
+                "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
+            );
 
             // Login with valid username and password
-            _wait.Until(drv => drv.FindElement(By.XPath("//input[@name='username']"))).SendKeys("Admin");
-            _wait.Until(drv => drv.FindElement(By.XPath("//input[@name='password']"))).SendKeys("admin123");
-            _wait.Until(drv => drv.FindElement(
-                    By.XPath("//button[contains(@class, 'orangehrm-login-button')]"))).Click();
+            loginPage.EnterUsername("Admin");
+            loginPage.EnterPassword("admin123");
+            loginPage.ClickLoginButton();
 
             // Locate the profile picture to verify that the user is logged in
-            _wait.Until(drv => drv.FindElement(By.XPath("//img[@alt='profile picture']")));
+            _wait.Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(
+                    By.XPath("//img[@alt='profile picture']")
+                )
+            );
         }
         catch (WebException ex)
         {
@@ -57,7 +67,9 @@ public class TestBase
     [ClassCleanup(InheritanceBehavior.BeforeEachDerivedClass, ClassCleanupBehavior.EndOfClass)]
     public static void ClassPostcondition()
     {
-        _testContext.WriteLine($"Class postcondition runs in {_testContext.FullyQualifiedTestClassName}");
+        _testContext.WriteLine(
+            $"Class postcondition runs in {_testContext.FullyQualifiedTestClassName}"
+        );
         _webDriver.Quit();
     }
 }
