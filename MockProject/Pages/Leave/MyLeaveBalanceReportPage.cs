@@ -1,31 +1,45 @@
-namespace MockProject.Pages;
+namespace MockProject.Pages.Leave;
 
 public class MyLeaveBalanceReportPage : PageBase
 {
+    #region PageElements
+    private IWebElement _title =>
+        _webDriver.FindElement(By.XPath("//h5[text()='My Leave Entitlements and Usage Report']"));
     private IWebElement _dropdown => _webDriver.FindElement(By.XPath("//div[@tabindex='0']/.."));
-    private IWebElement _dropdownOption = default!;
+    private IWebElement _dropdownOption = null!;
     private IWebElement _error => _webDriver.FindElement(By.XPath("//span[text()='Required']"));
     private IWebElement _generateButton =>
         _webDriver.FindElement(By.XPath("//button[contains(., 'Generate')]"));
-    private IEnumerable<IWebElement> _dataColumn = default!;
+    private IEnumerable<IWebElement> _dataColumn = null!;
+    #endregion
 
-    public MyLeaveBalanceReportPage(IWebDriver webDriver, WebDriverWait wait, string url)
-        : base(webDriver, wait, url) { }
+    #region PageInteractions
+    public MyLeaveBalanceReportPage(IWebDriver webDriver, WebDriverWait wait)
+        : base(
+            webDriver,
+            wait,
+            "https://opensource-demo.orangehrmlive.com/web/index.php/leave/viewMyLeaveBalanceReport"
+        ) { }
+
+    public IWebElement GetTitle()
+    {
+        return _title;
+    }
 
     public void ClickDropdown()
     {
         _dropdown.Click();
     }
 
-    public void SelectDropdownOption(By selector)
+    public void SelectDropdownOption(int optionIdx)
     {
-        _dropdownOption = _webDriver.FindElement(selector);
-        _dropdownOption.Click();
-    }
+        var xpathPattern =
+            optionIdx == 0
+                ? "//div[text()='-- Select --' and @role='option']"
+                : $"//div[@role='listbox']/div[{optionIdx + 1}]/span";
+        _dropdownOption = _webDriver.FindElement(By.XPath(xpathPattern));
 
-    public string GetDropdownText()
-    {
-        return _dropdown.Text;
+        _dropdownOption.Click();
     }
 
     public IWebElement GetError()
@@ -67,4 +81,5 @@ public class MyLeaveBalanceReportPage : PageBase
 
         return _dataColumn;
     }
+    #endregion
 }

@@ -3,9 +3,9 @@ namespace MockProject.Tests;
 [TestClass]
 public class TestBase
 {
-    protected static TestContext _testContext = default!;
-    protected static IWebDriver _webDriver = default!;
-    protected static WebDriverWait _wait = default!;
+    protected static TestContext _testContext = null!;
+    protected static IWebDriver _webDriver = null!;
+    protected static WebDriverWait _wait = null!;
 
     [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
     public static void ClassPrecondition(TestContext testContext)
@@ -32,23 +32,15 @@ public class TestBase
             _wait = new WebDriverWait(_webDriver, TimeSpan.FromMilliseconds(explicitTimeout));
 
             // Navigate to the site
-            var loginPage = new LoginPage(
-                _webDriver,
-                _wait,
-                "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
-            );
+            var loginPage = new LoginPage(_webDriver, _wait);
+            loginPage.NavigateToPage();
 
             // Login with valid username and password
-            loginPage.EnterUsername("Admin");
-            loginPage.EnterPassword("admin123");
-            loginPage.ClickLoginButton();
+            loginPage.LoginUser("Admin", "admin123");
 
             // Locate the profile picture to verify that the user is logged in
-            _wait.Until(
-                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(
-                    By.XPath("//img[@alt='profile picture']")
-                )
-            );
+            var homePage = new HomePage(_webDriver, _wait);
+            homePage.GetProfilePicture();
         }
         catch (WebException ex)
         {
@@ -70,6 +62,7 @@ public class TestBase
         _testContext.WriteLine(
             $"Class postcondition runs in {_testContext.FullyQualifiedTestClassName}"
         );
+
         _webDriver.Quit();
     }
 }

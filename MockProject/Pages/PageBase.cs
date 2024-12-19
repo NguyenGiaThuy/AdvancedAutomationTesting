@@ -2,13 +2,20 @@ namespace MockProject.Pages;
 
 public class PageBase
 {
-    protected IWebDriver _webDriver = default!;
-    protected WebDriverWait _wait = default!;
+    protected string _url = null!;
+
+    protected IWebDriver _webDriver = null!;
+    protected WebDriverWait _wait = null!;
 
     public PageBase(IWebDriver webDriver, WebDriverWait wait, string url)
     {
         _webDriver = webDriver;
         _wait = wait;
-        _webDriver.Navigate().GoToUrl(url);
+        _url = url;
+    }
+
+    public void NavigateToPage()
+    {
+        _webDriver.Navigate().GoToUrl(_url);
     }
 }

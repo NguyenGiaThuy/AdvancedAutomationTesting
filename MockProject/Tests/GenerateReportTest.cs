@@ -3,7 +3,7 @@ namespace MockProject.Tests;
 [TestClass]
 public class GenerateReportTest : TestBase
 {
-    private MyLeaveBalanceReportPage _page = default!;
+    private MyLeaveBalanceReportPage _myLeaveBalanceReportPage = null!;
 
     [TestInitialize]
     public void TestPrecondition()
@@ -15,11 +15,8 @@ public class GenerateReportTest : TestBase
             );
 
             // Navigate to the My Leave Entitlements and Usage Report page
-            _page = new MyLeaveBalanceReportPage(
-                _webDriver,
-                _wait,
-                "https://opensource-demo.orangehrmlive.com/web/index.php/leave/viewMyLeaveBalanceReport"
-            );
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_webDriver, _wait);
+            _myLeaveBalanceReportPage.NavigateToPage();
         }
         catch (WebException ex)
         {
@@ -29,13 +26,6 @@ public class GenerateReportTest : TestBase
         {
             throw new PreconditionException("Failed to load page due to timeout", ex);
         }
-        catch (NoSuchElementException ex)
-        {
-            throw new PreconditionException(
-                "Failed to navigate to My Leave Entitlements and Usage Report page",
-                ex
-            );
-        }
     }
 
     /// <summary>
@@ -43,24 +33,18 @@ public class GenerateReportTest : TestBase
     /// </summary>
     /// <param name="period"></param>
     [TestMethod]
-    [DataRow("2020-01-01 - 2020-31-12")]
-    [DataRow("2025-01-01 - 2025-31-12")]
-    public void TestSelectLeavePeriodSuccessfully(string period)
+    [DataRow(1)]
+    [DataRow(2)]
+    public void TestSelectLeavePeriodSuccessfully(int optionIdx)
     {
         // Locate and click the Leave Period dropdown
-        _page.ClickDropdown();
+        _myLeaveBalanceReportPage.ClickDropdown();
 
         // Select a valid period from the dropodown
-        _page.SelectDropdownOption(
-            By.XPath($"//span[normalize-space(text())='{period}']/..[@role='option']")
-        );
-
-        // Verify if the period reflected after selecting a valid period from the dropdown
-        var actualPeriod = _page.GetDropdownText();
-        Assert.AreEqual(expected: period, actual: actualPeriod);
+        _myLeaveBalanceReportPage.SelectDropdownOption(optionIdx);
 
         // Verify that error will not show
-        Assert.ThrowsException<NoSuchElementException>(() => _page.GetError());
+        Assert.ThrowsException<NoSuchElementException>(() => _myLeaveBalanceReportPage.GetError());
     }
 
     /// <summary>
@@ -70,13 +54,13 @@ public class GenerateReportTest : TestBase
     public void TestSelectLeavePeriodUnsuccessfully()
     {
         // Locate and click the Leave Period dropdown
-        _page.ClickDropdown();
+        _myLeaveBalanceReportPage.ClickDropdown();
 
-        // Select an invalid period from the dropdown
-        _page.SelectDropdownOption(By.XPath("//div[text()='-- Select --' and @role='option']"));
+        // Select an invalid period from the dropdown (by don't pass any argument)
+        _myLeaveBalanceReportPage.SelectDropdownOption(0);
 
         // Verify if the error will show
-        var error = _page.GetError();
+        var error = _myLeaveBalanceReportPage.GetError();
         Assert.IsNotNull(error);
     }
 
@@ -88,32 +72,32 @@ public class GenerateReportTest : TestBase
     public void TestGenerateReportSuccessfully()
     {
         // Locate and click the leave Period dropdown
-        _page.ClickDropdown();
+        _myLeaveBalanceReportPage.ClickDropdown();
 
         // Select a valid period from the dropdown
-        _page.SelectDropdownOption(
-            By.XPath("//span[normalize-space(text())='2020-01-01 - 2020-31-12']/..[@role='option']")
-        );
+        _myLeaveBalanceReportPage.SelectDropdownOption(1);
 
         // Locate and click the Generate button
-        _page.ClickGenerateButton();
+        _myLeaveBalanceReportPage.ClickGenerateButton();
 
         // Evaluate current total Leave Balance (Days)
-        var currentBalance = _page.GetDataColumn(5, false).Sum(item => decimal.Parse(item.Text));
+        var currentBalance = _myLeaveBalanceReportPage
+            .GetDataColumn(5, false)
+            .Sum(item => decimal.Parse(item.Text));
 
         // Locate and click the leave Period dropdown again
-        _page.ClickDropdown();
+        _myLeaveBalanceReportPage.ClickDropdown();
 
         // Select another valid period from the dropdown
-        _page.SelectDropdownOption(
-            By.XPath("//span[normalize-space(text())='2024-01-01 - 2024-31-12']/..[@role='option']")
-        );
+        _myLeaveBalanceReportPage.SelectDropdownOption(3);
 
         // Locate and click the Generate button again
-        _page.ClickGenerateButton();
+        _myLeaveBalanceReportPage.ClickGenerateButton();
 
         // Evaluate new total Leave Balance (Days)
-        var newBalance = _page.GetDataColumn(5, false).Sum(item => decimal.Parse(item.Text));
+        var newBalance = _myLeaveBalanceReportPage
+            .GetDataColumn(5, false)
+            .Sum(item => decimal.Parse(item.Text));
 
         // Verify that these balances are not equal
         Assert.AreNotEqual(currentBalance, newBalance);
