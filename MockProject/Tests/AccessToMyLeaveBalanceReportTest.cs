@@ -11,31 +11,30 @@ public class AccessToMyLeaveBalanceReportTest : TestBase
     {
         try
         {
-            _testContext.WriteLine(
-                $"Test precondition runs in {_testContext.FullyQualifiedTestClassName}"
-            );
-
             // Navigate to the Home page
-            _homePage = new HomePage(_webDriver, _wait);
-            _homePage.NavigateToPage();
+            _homePage = new HomePage(_browser);
+            _homePage.GoToPage();
 
             // Navigate to the My Leave Entitlements and Usage Report page
-            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_webDriver, _wait);
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
+
+            _testContext.WriteLine(
+                "Successfully navigated to the My Leave Entitlements and Usage Report page"
+            );
         }
         catch (WebException ex)
         {
+            _testContext.WriteLine("Failed to load page due to connection");
             throw new PreconditionException("Failed to load page due to connection", ex);
-        }
-        catch (TimeoutException ex)
-        {
-            throw new PreconditionException("Failed to load page due to timeout", ex);
         }
     }
 
     /// <summary>
     /// TC_PAGE_01 - Verify that the user can access the Leave Entitlements and Usage Report page.
     /// </summary>
-    [TestMethod]
+    [TestMethod(
+        "TC_PAGE_01 - Verify that the user can access the Leave Entitlements and Usage Report page."
+    )]
     public void TestAccessToMyLeaveBalanceReportSuccessfully()
     {
         // Navigate to the Leave item in the sidebar

@@ -10,21 +10,18 @@ public class GenerateReportTest : TestBase
     {
         try
         {
-            _testContext.WriteLine(
-                $"Test precondition runs in {_testContext.FullyQualifiedTestClassName}"
-            );
-
             // Navigate to the My Leave Entitlements and Usage Report page
-            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_webDriver, _wait);
-            _myLeaveBalanceReportPage.NavigateToPage();
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
+            _myLeaveBalanceReportPage.GoToPage();
+
+            _testContext.WriteLine(
+                "Successfully navigated to the My Leave Entitlements and Usage Report page"
+            );
         }
         catch (WebException ex)
         {
+            _testContext.WriteLine("Failed to load page due to connection");
             throw new PreconditionException("Failed to load page due to connection", ex);
-        }
-        catch (TimeoutException ex)
-        {
-            throw new PreconditionException("Failed to load page due to timeout", ex);
         }
     }
 
@@ -32,9 +29,9 @@ public class GenerateReportTest : TestBase
     /// TC_GENERATE_SECTION_01 - Verify that the user can select a leave period.
     /// </summary>
     /// <param name="period"></param>
-    [TestMethod]
-    [DataRow(1)]
-    [DataRow(2)]
+    [TestMethod("TC_GENERATE_SECTION_01 - Verify that the user can select a leave period.")]
+    [DataRow(1, DisplayName = "Second option")]
+    [DataRow(-1, DisplayName = "Last option")]
     public void TestSelectLeavePeriodSuccessfully(int optionIdx)
     {
         // Locate and click the Leave Period dropdown
@@ -50,13 +47,15 @@ public class GenerateReportTest : TestBase
     /// <summary>
     /// TC_GENERATE_SECTION_02 - Verify thata the system validates the selected leave period.
     /// </summary>
-    [TestMethod]
+    [TestMethod(
+        "TC_GENERATE_SECTION_02 - Verify thata the system validates the selected leave period."
+    )]
     public void TestSelectLeavePeriodUnsuccessfully()
     {
         // Locate and click the Leave Period dropdown
         _myLeaveBalanceReportPage.ClickDropdown();
 
-        // Select an invalid period from the dropdown (by don't pass any argument)
+        // Select an invalid period from the dropdown
         _myLeaveBalanceReportPage.SelectDropdownOption(0);
 
         // Verify if the error will show
@@ -65,10 +64,10 @@ public class GenerateReportTest : TestBase
     }
 
     /// <summary>
-    /// TC_GENERATE_SECTION_03 - Verify thath the system allows report generation
+    /// TC_GENERATE_SECTION_03 - Verify thath the system allows report generation.
     /// with a valid leave period.
     /// </summary>
-    [TestMethod]
+    [TestMethod("TC_GENERATE_SECTION_03 - Verify thath the system allows report generation.")]
     public void TestGenerateReportSuccessfully()
     {
         // Locate and click the leave Period dropdown
