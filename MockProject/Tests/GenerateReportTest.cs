@@ -25,10 +25,6 @@ public class GenerateReportTest : TestBase
         }
     }
 
-    /// <summary>
-    /// TC_GENERATE_SECTION_01 - Verify that the user can select a leave period.
-    /// </summary>
-    /// <param name="period"></param>
     [TestMethod("TC_GENERATE_SECTION_01 - Verify that the user can select a leave period.")]
     [DataRow(1, DisplayName = "Second option")]
     [DataRow(-1, DisplayName = "Last option")]
@@ -44,9 +40,6 @@ public class GenerateReportTest : TestBase
         Assert.ThrowsException<NoSuchElementException>(() => _myLeaveBalanceReportPage.GetError());
     }
 
-    /// <summary>
-    /// TC_GENERATE_SECTION_02 - Verify thata the system validates the selected leave period.
-    /// </summary>
     [TestMethod(
         "TC_GENERATE_SECTION_02 - Verify thata the system validates the selected leave period."
     )]
@@ -63,10 +56,6 @@ public class GenerateReportTest : TestBase
         Assert.IsNotNull(error);
     }
 
-    /// <summary>
-    /// TC_GENERATE_SECTION_03 - Verify thath the system allows report generation.
-    /// with a valid leave period.
-    /// </summary>
     [TestMethod("TC_GENERATE_SECTION_03 - Verify thath the system allows report generation.")]
     public void TestGenerateReportSuccessfully()
     {

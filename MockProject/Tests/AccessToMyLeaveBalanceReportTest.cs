@@ -29,9 +29,6 @@ public class AccessToMyLeaveBalanceReportTest : TestBase
         }
     }
 
-    /// <summary>
-    /// TC_PAGE_01 - Verify that the user can access the Leave Entitlements and Usage Report page.
-    /// </summary>
     [TestMethod(
         "TC_PAGE_01 - Verify that the user can access the Leave Entitlements and Usage Report page."
     )]
