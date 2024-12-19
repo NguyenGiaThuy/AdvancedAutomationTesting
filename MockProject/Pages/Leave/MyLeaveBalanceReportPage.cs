@@ -1,85 +1,87 @@
 namespace MockProject.Pages.Leave;
 
-public class MyLeaveBalanceReportPage : PageBase
+public class MyLeaveBalanceReportPage(IBrowser browser)
+    : PageBase(
+        browser,
+        "https://opensource-demo.orangehrmlive.com/web/index.php/leave/viewMyLeaveBalanceReport"
+    )
 {
-    #region PageElements
-    private IWebElement _title =>
-        _webDriver.FindElement(By.XPath("//h5[text()='My Leave Entitlements and Usage Report']"));
-    private IWebElement _dropdown => _webDriver.FindElement(By.XPath("//div[@tabindex='0']/.."));
-    private IWebElement _dropdownOption = null!;
-    private IWebElement _error => _webDriver.FindElement(By.XPath("//span[text()='Required']"));
-    private IWebElement _generateButton =>
-        _webDriver.FindElement(By.XPath("//button[contains(., 'Generate')]"));
-    private IEnumerable<IWebElement> _dataColumn = null!;
+    #region PageElementLocators
+    private By _title = By.XPath("//h5[text()='My Leave Entitlements and Usage Report']");
+    private By _dropdown => By.XPath("//div[@tabindex='0']/..");
+    private By _error => By.XPath("//span[text()='Required']");
+    private By _generateButton = By.XPath("//button[contains(., 'Generate')]");
     #endregion
 
     #region PageInteractions
-    public MyLeaveBalanceReportPage(IWebDriver webDriver, WebDriverWait wait)
-        : base(
-            webDriver,
-            wait,
-            "https://opensource-demo.orangehrmlive.com/web/index.php/leave/viewMyLeaveBalanceReport"
-        ) { }
-
     public IWebElement GetTitle()
     {
-        return _title;
-    }
-
-    public void ClickDropdown()
-    {
-        _dropdown.Click();
-    }
-
-    public void SelectDropdownOption(int optionIdx)
-    {
-        var xpathPattern =
-            optionIdx == 0
-                ? "//div[text()='-- Select --' and @role='option']"
-                : $"//div[@role='listbox']/div[{optionIdx + 1}]/span";
-        _dropdownOption = _webDriver.FindElement(By.XPath(xpathPattern));
-
-        _dropdownOption.Click();
+        var title = _browser.GetWebElement(_title);
+        return title;
     }
 
     public IWebElement GetError()
     {
-        return _error;
+        var error = _browser.GetWebElement(_error);
+        return error;
+    }
+
+    public void ClickDropdown()
+    {
+        var dropdown = _browser.GetWebElement(_dropdown);
+        dropdown.Click();
+    }
+
+    public void SelectDropdownOption(int optionIdx)
+    {
+        string xpathPattern;
+        switch (optionIdx)
+        {
+            case -1:
+                xpathPattern = $"//div[@role='listbox']/div[last()]";
+                break;
+            case 0: // Workaround because of bad coding
+                xpathPattern = "//div[text()='-- Select --' and @role='option']";
+                break;
+            default:
+                xpathPattern = $"//div[@role='listbox']/div[{optionIdx + 1}]";
+                break;
+        }
+
+        var dropdownOption = _browser.GetWebElement(By.XPath(xpathPattern));
+        dropdownOption.Click();
     }
 
     public void ClickGenerateButton()
     {
-        _generateButton.Click();
+        var generateButton = _browser.GetWebElement(_generateButton);
+        generateButton.Click();
     }
 
     public IEnumerable<IWebElement> GetDataColumn(int colIdx, bool containsHeader = true)
     {
+        // Since the website uses bad coding,
+        // we use this logic to workaround
         string additionalContent;
         string xpathPattern;
-
-        // Since the website uses bad coding convention,
-        // we use this logic to workaround
         var actualColIdx = colIdx - 1;
-        if (actualColIdx == -1)
+        switch (actualColIdx)
         {
-            additionalContent = containsHeader
-                ? "(@class='rgCell' or string()='Leave Type')"
-                : "@class='rgCell'";
-            xpathPattern = $"//div[@data-rgcol='{actualColIdx + 1}' and {additionalContent}]";
-        }
-        else
-        {
-            additionalContent = containsHeader ? "" : " and @class!='rgHeaderCell'";
-            xpathPattern =
-                $"//div[@data-rgcol='{actualColIdx}' {additionalContent} and @class!='rgCell' and string()!='Leave Type']";
+            case -1:
+                additionalContent = containsHeader
+                    ? "(@class='rgCell' or string()='Leave Type')"
+                    : "@class='rgCell'";
+                xpathPattern = $"//div[@data-rgcol='{actualColIdx + 1}' and {additionalContent}]";
+                break;
+            default:
+                additionalContent = containsHeader ? "" : " and @class!='rgHeaderCell'";
+                xpathPattern =
+                    $"//div[@data-rgcol='{actualColIdx}' {additionalContent} and @class!='rgCell' and string()!='Leave Type']";
+                break;
         }
 
-        _wait.Until(
-            SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath(xpathPattern))
-        );
-        _dataColumn = _webDriver.FindElements(By.XPath(xpathPattern));
-
-        return _dataColumn;
+        var dataColumn = _browser.TryGetWebElementsUntil(By.XPath(xpathPattern), 30000);
+        return dataColumn;
     }
     #endregion
 }

@@ -1,39 +1,47 @@
 namespace MockProject.Pages.Home;
 
-public class HomePage : PageBase
+public class HomePage(IBrowser browser)
+    : PageBase(browser, "https://opensource-demo.orangehrmlive.com/web/index.php")
 {
-    #region PageElements
-    private IWebElement _profilePicture =>
-        _webDriver.FindElement(By.XPath("//img[@alt='profile picture']"));
-    private IWebElement _leave => _webDriver.FindElement(By.XPath("//span[text()='Leave']/.."));
-    private IWebElement _reports =>
-        _webDriver.FindElement(By.XPath("//span[text()='Reports ']/.."));
-    private IWebElement _myLeaveBalanceReport =>
-        _webDriver.FindElement(By.XPath("//a[text()='My Leave Entitlements and Usage Report']/.."));
+    #region PageElementLocators
+    private By _profilePicture = By.XPath("//img[@alt='profile picture']");
+    private By _leave => By.XPath("//span[text()='Leave']/..");
+    private By _reports = By.XPath("//span[text()='Reports ']/..");
+    private By _myLeaveBalanceReport = By.XPath(
+        "//a[text()='My Leave Entitlements and Usage Report']/.."
+    );
     #endregion
 
     #region PageInteractions
-    public HomePage(IWebDriver webDriver, WebDriverWait wait)
-        : base(webDriver, wait, "https://opensource-demo.orangehrmlive.com/web/index.php") { }
-
     public IWebElement GetProfilePicture()
     {
-        return _profilePicture;
+        var profilePicture = _browser.GetWebElement(_profilePicture);
+        return profilePicture;
     }
 
     public void ClickLeave()
     {
-        _leave.Click();
+        var leave = _browser.GetWebElement(_leave);
+        leave.Click();
     }
 
     public void ClickReports()
     {
-        _reports.Click();
+        var reports = _browser.GetWebElement(_reports);
+        reports.Click();
     }
 
     public void ClickMyBalanceReport()
     {
-        _myLeaveBalanceReport.Click();
+        var myLeaveBalanceReport = _browser.GetWebElement(_myLeaveBalanceReport);
+        myLeaveBalanceReport.Click();
+    }
+
+    public void GoToMyLeaveBalanceReportPage()
+    {
+        ClickLeave();
+        ClickReports();
+        ClickMyBalanceReport();
     }
     #endregion
 }

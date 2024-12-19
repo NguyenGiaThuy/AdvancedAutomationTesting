@@ -1,37 +1,31 @@
 namespace MockProject.Pages.Login;
 
-public class LoginPage : PageBase
+public class LoginPage(IBrowser browser)
+    : PageBase(browser, "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login")
 {
     #region PageElements
-    private IWebElement _usernameInput =>
-        _webDriver.FindElement(By.XPath("//input[@name='username']"));
-    private IWebElement _passwordInput =>
-        _webDriver.FindElement(By.XPath("//input[@name='password']"));
-    private IWebElement _loginButton =>
-        _webDriver.FindElement(By.ClassName("orangehrm-login-button"));
+    private By _usernameInput = By.XPath("//input[@name='username']");
+    private By _passwordInput = By.XPath("//input[@name='password']");
+    private By _loginButton = By.ClassName("orangehrm-login-button");
     #endregion
 
     #region PageInteractions
-    public LoginPage(IWebDriver webDriver, WebDriverWait wait)
-        : base(
-            webDriver,
-            wait,
-            "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
-        ) { }
-
     public void EnterUsername(string username)
     {
-        _usernameInput.SendKeys(username);
+        var usernameInput = _browser.GetWebElement(_usernameInput);
+        usernameInput.SendKeys(username);
     }
 
     public void EnterPassword(string password)
     {
-        _passwordInput.SendKeys(password);
+        var passwordInput = _browser.GetWebElement(_passwordInput);
+        passwordInput.SendKeys(password);
     }
 
     public void ClickLoginButton()
     {
-        _loginButton.Click();
+        var loginButton = _browser.GetWebElement(_loginButton);
+        loginButton.Click();
     }
 
     public void LoginUser(string username, string password)
