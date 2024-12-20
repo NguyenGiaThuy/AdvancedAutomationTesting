@@ -17,7 +17,6 @@ public class AccessToMyLeaveBalanceReportTest : TestBase
 
             // Navigate to the My Leave Entitlements and Usage Report page
             _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
-
             _testContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
             );
@@ -32,6 +31,7 @@ public class AccessToMyLeaveBalanceReportTest : TestBase
     [TestMethod(
         "TC_PAGE_01 - Verify that the user can access the Leave Entitlements and Usage Report page."
     )]
+    [TestCategory("TC_PAGE")]
     public void TestAccessToMyLeaveBalanceReportSuccessfully()
     {
         // Navigate to the Leave item in the sidebar

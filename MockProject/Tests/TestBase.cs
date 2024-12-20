@@ -38,7 +38,6 @@ public class TestBase : IDisposable
             // Locate the profile picture to verify that the user is logged in
             var homePage = new HomePage(_browser);
             homePage.GetProfilePicture();
-
             _testContext.WriteLine("Successfully logged in");
         }
         catch (WebException ex)
