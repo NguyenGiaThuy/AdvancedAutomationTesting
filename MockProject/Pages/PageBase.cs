@@ -5,7 +5,7 @@ public class PageBase
     protected IBrowser _browser = null!;
     protected string _url = null!;
 
-    public PageBase(IBrowser browser, string url)
+    protected PageBase(IBrowser browser, string url)
     {
         _browser = browser;
         _url = url;

@@ -47,13 +47,24 @@ public interface IBrowser
     IEnumerable<IWebElement> TryGetWebElementsUntil(By by, int timeout);
 
     /// <summary>
+    /// Check if the web element is visible
+    /// </summary>
+    /// <param name="by">The locator of the web element</param>
+    /// <param name="timeout">The timeout in miliseconds</param>
+    /// <returns>
+    /// True if the web element is visible, otherwise false
+    /// </returns>
+    bool WebElementIsVisibile(By by, int timeout = 1000);
+
+    /// <summary>
     /// Check if the web element is clickable
     /// </summary>
     /// <param name="by">The locator of the web element</param>
+    /// <param name="timeout">The timeout in miliseconds</param>
     /// <returns>
     /// True if the web element is clickable, otherwise false
     /// </returns>
-    bool IsClickable(By by);
+    bool WebElementIsClickable(By by, int timout = 1000);
 
     /// <summary>
     /// Quit the browser

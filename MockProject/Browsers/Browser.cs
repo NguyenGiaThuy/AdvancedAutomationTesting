@@ -70,11 +70,25 @@ public class Browser : IBrowser
         );
     }
 
-    public bool IsClickable(By by)
+    public bool WebElementIsVisibile(By by, int timeout = 1000)
     {
         try
         {
-            var wait = new WebDriverWait(_webDriver, TimeSpan.FromMilliseconds(1000));
+            var wait = new WebDriverWait(_webDriver, TimeSpan.FromMilliseconds(timeout));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(by));
+            return true;
+        }
+        catch (WebDriverTimeoutException)
+        {
+            return false;
+        }
+    }
+
+    public bool WebElementIsClickable(By by, int timeout = 1000)
+    {
+        try
+        {
+            var wait = new WebDriverWait(_webDriver, TimeSpan.FromMilliseconds(timeout));
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(by));
             return true;
         }

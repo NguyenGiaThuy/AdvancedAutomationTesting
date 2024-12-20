@@ -1,4 +1,4 @@
-namespace MockProject.Pages.Leave;
+namespace MockProject.Pages.Leave.Reports;
 
 public class MyLeaveBalanceReportPage(IBrowser browser)
     : PageBase(
@@ -8,9 +8,15 @@ public class MyLeaveBalanceReportPage(IBrowser browser)
 {
     #region PageElementLocators
     private By _title = By.XPath("//h5[text()='My Leave Entitlements and Usage Report']");
-    private By _dropdown => By.XPath("//div[@tabindex='0']/..");
-    private By _error => By.XPath("//span[text()='Required']");
+    private By _dropdown = By.XPath("//div[@tabindex='0']/..");
+    private By _error = By.XPath("//span[text()='Required']");
     private By _generateButton = By.XPath("//button[contains(., 'Generate')]");
+    private By _collapseButton = By.XPath(
+        "//button/i[contains(@class, 'oxd-icon bi-caret-up-fill')]/.."
+    );
+    private By _expandButton = By.XPath(
+        "//button/i[contains(@class, 'oxd-icon bi-caret-down-fill')]/.."
+    );
     #endregion
 
     #region PageInteractions
@@ -24,6 +30,12 @@ public class MyLeaveBalanceReportPage(IBrowser browser)
     {
         var error = _browser.GetWebElement(_error);
         return error;
+    }
+
+    public IWebElement GetGenerateButton()
+    {
+        var generateButton = _browser.GetWebElement(_generateButton);
+        return generateButton;
     }
 
     public void ClickDropdown()
@@ -56,6 +68,23 @@ public class MyLeaveBalanceReportPage(IBrowser browser)
     {
         var generateButton = _browser.GetWebElement(_generateButton);
         generateButton.Click();
+    }
+
+    public void ClickCollapseButton()
+    {
+        var collapseButton = _browser.GetWebElement(_collapseButton);
+        collapseButton.Click();
+    }
+
+    public void ClickExpandButton()
+    {
+        var expandButton = _browser.GetWebElement(_expandButton);
+        expandButton.Click();
+    }
+
+    public bool GenerateButtonIsClickable()
+    {
+        return _browser.WebElementIsClickable(_generateButton);
     }
 
     public IEnumerable<IWebElement> GetDataColumn(int colIdx, bool containsHeader = true)
