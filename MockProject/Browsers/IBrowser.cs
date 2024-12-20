@@ -47,6 +47,15 @@ public interface IBrowser
     IEnumerable<IWebElement> TryGetWebElementsUntil(By by, int timeout);
 
     /// <summary>
+    /// Check if the web element is clickable
+    /// </summary>
+    /// <param name="by">The locator of the web element</param>
+    /// <returns>
+    /// True if the web element is clickable, otherwise false
+    /// </returns>
+    bool IsClickable(By by);
+
+    /// <summary>
     /// Quit the browser
     /// </summary>
     void Quit();

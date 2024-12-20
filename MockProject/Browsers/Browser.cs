@@ -70,6 +70,20 @@ public class Browser : IBrowser
         );
     }
 
+    public bool IsClickable(By by)
+    {
+        try
+        {
+            var wait = new WebDriverWait(_webDriver, TimeSpan.FromMilliseconds(1000));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(by));
+            return true;
+        }
+        catch (WebDriverTimeoutException)
+        {
+            return false;
+        }
+    }
+
     public void Quit()
     {
         _webDriver.Quit();
