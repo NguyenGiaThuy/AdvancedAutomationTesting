@@ -5,6 +5,25 @@ public class ReportDataTest : TestBase
 {
     private MyLeaveBalanceReportPage _myLeaveBalanceReportPage = null!;
 
+    [TestInitialize]
+    public void TestPrecondition()
+    {
+        try
+        {
+            // Navigate to the My Leave Entitlements and Usage Report page
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
+            _myLeaveBalanceReportPage.GoToPage();
+            _testContext.WriteLine(
+                "Successfully navigated to the My Leave Entitlements and Usage Report page"
+            );
+        }
+        catch (WebException ex)
+        {
+            _testContext.WriteLine("Failed to load page due to connection");
+            throw new PreconditionException("Failed to load page due to connection", ex);
+        }
+    }
+
     private string DeleteLeaveTypePrecondition()
     {
         try
@@ -157,6 +176,79 @@ public class ReportDataTest : TestBase
                 $"Failed to find the new leave type to delete: {leaveTypeName}",
                 ex
             );
+        }
+    }
+
+    [TestMethod("TC_DATA_SECTION_01 - Verify that the data table can be enlarged.")]
+    [TestCategory("TC_DATA_SECTION")]
+    public void TestEnlargeDataTableSuccessfully()
+    {
+        // Click the Enlarge button
+        _myLeaveBalanceReportPage.ClickEnlargeButton();
+
+        // Verify that the Enlarge button is not visible
+        var visible = _myLeaveBalanceReportPage.EnlargeButtonIsVisible();
+        Assert.IsFalse(visible);
+    }
+
+    [TestMethod("TC_DATA_SECTION_02 - Verify that the data table can be shrunk.")]
+    [TestCategory("TC_DATA_SECTION")]
+    public void TestShrinkDataTableSuccessfully()
+    {
+        // Click the Enlarge button
+        _myLeaveBalanceReportPage.ClickEnlargeButton();
+
+        // Click the Shrink button
+        _myLeaveBalanceReportPage.ClickShrinkButton();
+
+        // Verify that the Shrink button is not visible
+        var visible = _myLeaveBalanceReportPage.ShrinkButtonIsVisible();
+        Assert.IsFalse(visible);
+    }
+
+    [TestMethod("TC_DATA_SECTION_04 - Verify that the data table can be collapsed.")]
+    [TestCategory("TC_DATA_SECTION")]
+    public void TestReportCounterMatchesNumOfRows()
+    {
+        // Generate a random report
+        _myLeaveBalanceReportPage.ClickDropdown();
+        _myLeaveBalanceReportPage.SelectDropdownOption(1);
+        _myLeaveBalanceReportPage.ClickGenerateButton();
+
+        // Get the number of rows in the data table
+        var nRows = _myLeaveBalanceReportPage.GetDataColumn(0, false).Count();
+
+        // Get the report counter
+        var counter = _myLeaveBalanceReportPage.GetRecordsCounter();
+
+        // Verify that the report counter matches the number of rows
+        Assert.AreEqual(nRows, counter);
+    }
+
+    [TestMethod("TC_DATA_SECTION_05 - Verify that the data types in the data table are valid.")]
+    [TestCategory("TC_DATA_SECTION")]
+    public void TestReportDataTypesCorrect()
+    {
+        // Generate a random report
+        _myLeaveBalanceReportPage.ClickDropdown();
+        _myLeaveBalanceReportPage.SelectDropdownOption(1);
+        _myLeaveBalanceReportPage.ClickGenerateButton();
+
+        // Verify that the first column is of type string
+        Assert.ThrowsException<FormatException>(
+            () =>
+                _myLeaveBalanceReportPage
+                    .GetDataColumn(0, false)
+                    .Sum(item => decimal.Parse(item.Text))
+        );
+
+        // Verify that the rest columns are of type decimal
+        for (var i = 1; i < 6; i++)
+        {
+            var sum = _myLeaveBalanceReportPage
+                .GetDataColumn(i, false)
+                .Sum(item => decimal.Parse(item.Text));
+            Assert.IsInstanceOfType(sum, typeof(decimal));
         }
     }
 

@@ -17,6 +17,15 @@ public class MyLeaveBalanceReportPage(IBrowser browser)
     private By _expandButton = By.XPath(
         "//button/i[contains(@class, 'oxd-icon bi-caret-down-fill')]/.."
     );
+    private By _enlargeButton = By.XPath(
+        "//i[@class='oxd-icon bi-arrows-fullscreen oxd-icon-button__icon --toggable-icon']"
+    );
+    private By _shrinkButton = By.XPath(
+        "//i[@class='oxd-icon bi-fullscreen-exit oxd-icon-button__icon --toggable-icon']"
+    );
+    private By _recordsCounter = By.XPath(
+        "//span[@class='oxd-text oxd-text--span oxd-text--count']"
+    );
     #endregion
 
     #region PageInteractions
@@ -82,6 +91,33 @@ public class MyLeaveBalanceReportPage(IBrowser browser)
         expandButton.Click();
     }
 
+    public void ClickEnlargeButton()
+    {
+        var enlargeButton = _browser.GetWebElement(_enlargeButton);
+        enlargeButton.Click();
+    }
+
+    public void ClickShrinkButton()
+    {
+        var shrinkButton = _browser.GetWebElement(_shrinkButton);
+        shrinkButton.Click();
+    }
+
+    public bool EnlargeButtonIsVisible()
+    {
+        return _browser.WebElementIsVisibile(_enlargeButton);
+    }
+
+    public bool ShrinkButtonIsVisible()
+    {
+        return _browser.WebElementIsVisibile(_shrinkButton);
+    }
+
+    public bool GenerateButtonIsVisible()
+    {
+        return _browser.WebElementIsVisibile(_generateButton);
+    }
+
     public bool GenerateButtonIsClickable()
     {
         return _browser.WebElementIsClickable(_generateButton);
@@ -111,6 +147,13 @@ public class MyLeaveBalanceReportPage(IBrowser browser)
 
         var dataColumn = _browser.TryGetWebElementsUntil(By.XPath(xpathPattern), 30000);
         return dataColumn;
+    }
+
+    public int GetRecordsCounter()
+    {
+        var recordsCounter = _browser.GetWebElement(_recordsCounter);
+        var str = recordsCounter.Text;
+        return int.Parse(str.Substring(1, str.IndexOf(')') - 1));
     }
     #endregion
 }
