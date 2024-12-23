@@ -1,35 +1,8 @@
 namespace TestCore.Browsers;
 
-public class Browser : IBrowser
+public class Browser(IWebDriver webDriver) : IBrowser
 {
-    private IWebDriver _webDriver = null!;
-
-    public Browser(string launchBrowser, int implicitTimeout)
-    {
-        IDriverConfig driverConfig;
-        IWebDriver webDriver;
-        switch (launchBrowser)
-        {
-            case "Firefox":
-                driverConfig = new FirefoxConfig();
-                webDriver = new FirefoxDriver();
-                break;
-            case "Chrome":
-                driverConfig = new ChromeConfig();
-                webDriver = new ChromeDriver();
-                break;
-            case "Edge":
-                driverConfig = new EdgeConfig();
-                webDriver = new EdgeDriver();
-                break;
-            default:
-                throw new WebDriverException("Invalid browser configuration");
-        }
-
-        new WebDriverManager.DriverManager().SetUpDriver(driverConfig);
-        _webDriver = webDriver;
-        _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(implicitTimeout);
-    }
+    private IWebDriver _webDriver = webDriver;
 
     public void GoToUrl(string url)
     {
