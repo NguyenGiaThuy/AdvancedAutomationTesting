@@ -12,11 +12,11 @@ public class AccessToMyLeaveBalanceReportTest : TestBase
         try
         {
             // Navigate to the Home page
-            _homePage = new HomePage(_browser);
+            _homePage = new HomePage(_browser, _baseUrl);
             _homePage.GoToPage();
 
             // Navigate to the My Leave Entitlements and Usage Report page
-            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _testContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
             );

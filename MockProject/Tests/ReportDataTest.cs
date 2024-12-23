@@ -11,7 +11,7 @@ public class ReportDataTest : TestBase
         try
         {
             // Navigate to the My Leave Entitlements and Usage Report page
-            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _myLeaveBalanceReportPage.GoToPage();
             _testContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
@@ -29,7 +29,7 @@ public class ReportDataTest : TestBase
         try
         {
             // Navigate to the Leave Types page
-            var leaveTypesPage = new LeaveTypesPage(_browser);
+            var leaveTypesPage = new LeaveTypesPage(_browser, _baseUrl);
             leaveTypesPage.GoToPage();
             _testContext.WriteLine("Successfully navigated to the Leave Types page");
 
@@ -42,7 +42,7 @@ public class ReportDataTest : TestBase
             _testContext.WriteLine($"Successfully deleted the leave type: {leaveTypeName}");
 
             // Navigate to the My Leave Entitlements and Usage Report page
-            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _myLeaveBalanceReportPage.GoToPage();
             _testContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
@@ -67,7 +67,7 @@ public class ReportDataTest : TestBase
         try
         {
             // Navigate to the Leave Types page
-            var leaveTypesPage = new LeaveTypesPage(_browser);
+            var leaveTypesPage = new LeaveTypesPage(_browser, _baseUrl);
             leaveTypesPage.GoToPage();
             _testContext.WriteLine("Successfully navigated to the Leave Types page");
 
@@ -109,7 +109,7 @@ public class ReportDataTest : TestBase
             var newLeaveTypeName = Guid.NewGuid().ToString();
 
             // Navigate to the Leave Types page
-            var leaveTypesPage = new LeaveTypesPage(_browser);
+            var leaveTypesPage = new LeaveTypesPage(_browser, _baseUrl);
             leaveTypesPage.GoToPage();
             _testContext.WriteLine("Successfully navigated to the Leave Types page");
 
@@ -130,7 +130,7 @@ public class ReportDataTest : TestBase
             }
 
             // Navigate to the My Leave Entitlements and Usage Report page
-            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _myLeaveBalanceReportPage.GoToPage();
             _testContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
@@ -155,7 +155,7 @@ public class ReportDataTest : TestBase
         try
         {
             // Navigate to the Leave Types page
-            var leaveTypesPage = new LeaveTypesPage(_browser);
+            var leaveTypesPage = new LeaveTypesPage(_browser, _baseUrl);
             leaveTypesPage.GoToPage();
             _testContext.WriteLine("Successfully navigated to the Leave Types page");
 

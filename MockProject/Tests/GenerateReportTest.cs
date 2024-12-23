@@ -11,7 +11,7 @@ public class GenerateReportTest : TestBase
         try
         {
             // Navigate to the My Leave Entitlements and Usage Report page
-            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser);
+            _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _myLeaveBalanceReportPage.GoToPage();
             _testContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
