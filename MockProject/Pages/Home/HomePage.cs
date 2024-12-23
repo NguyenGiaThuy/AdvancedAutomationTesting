@@ -1,7 +1,7 @@
 namespace MockProject.Pages.Home;
 
-public class HomePage(IBrowser browser)
-    : PageBase(browser, "https://opensource-demo.orangehrmlive.com/web/index.php")
+public class HomePage(IBrowser browser, string baseUrl)
+    : PageBase(browser, $"{baseUrl}/web/index.php")
 {
     #region PageElementLocators
     private By _profilePicture = By.XPath("//img[@alt='profile picture']");

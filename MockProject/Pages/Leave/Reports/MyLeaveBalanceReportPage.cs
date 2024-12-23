@@ -1,10 +1,7 @@
 namespace MockProject.Pages.Leave.Reports;
 
-public class MyLeaveBalanceReportPage(IBrowser browser)
-    : PageBase(
-        browser,
-        "https://opensource-demo.orangehrmlive.com/web/index.php/leave/viewMyLeaveBalanceReport"
-    )
+public class MyLeaveBalanceReportPage(IBrowser browser, string baseUrl)
+    : PageBase(browser, $"{baseUrl}/web/index.php/leave/viewMyLeaveBalanceReport")
 {
     #region PageElementLocators
     private By _title = By.XPath("//h5[text()='My Leave Entitlements and Usage Report']");

@@ -1,20 +1,13 @@
 namespace MockProject.Pages;
 
-public class PageBase
+public class PageBase(IBrowser browser, string url)
 {
-    protected IBrowser _browser = null!;
-    protected string _url = null!;
-
-    protected PageBase(IBrowser browser, string url)
-    {
-        _browser = browser;
-        _url = url;
-    }
+    protected IBrowser _browser = browser;
+    private string _url = url;
 
     /// <summary>
     /// Go to the page
     /// </summary>
-    /// <exception cref="WebDriverException"></exception>
     public void GoToPage()
     {
         _browser.GoToUrl(_url);

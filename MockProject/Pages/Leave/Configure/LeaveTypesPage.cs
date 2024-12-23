@@ -1,10 +1,7 @@
 namespace MockProject.Pages.Leave.Configure;
 
-public class LeaveTypesPage(IBrowser browser)
-    : PageBase(
-        browser,
-        "https://opensource-demo.orangehrmlive.com/web/index.php/leave/leaveTypeList"
-    )
+public class LeaveTypesPage(IBrowser browser, string baseUrl)
+    : PageBase(browser, $"{baseUrl}/web/index.php/leave/leaveTypeList")
 {
     #region PageElementLocators
     private By _addButton = By.XPath("//button[contains(.,  'Add')]");

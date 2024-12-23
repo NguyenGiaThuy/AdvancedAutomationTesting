@@ -1,7 +1,7 @@
 namespace MockProject.Pages.Login;
 
-public class LoginPage(IBrowser browser)
-    : PageBase(browser, "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login")
+public class LoginPage(IBrowser browser, string baseUrl)
+    : PageBase(browser, $"{baseUrl}/web/index.php/auth/login")
 {
     #region PageElements
     private By _usernameInput = By.XPath("//input[@name='username']");
