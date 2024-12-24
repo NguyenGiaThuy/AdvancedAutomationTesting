@@ -7,7 +7,7 @@ jobs:
   test:
     environment: Production
     env:
-      TEST_ENVIRONMENT: prod
+      TEST_ENVIRONMENT: Production
       TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
     runs-on: ubuntu-24.04

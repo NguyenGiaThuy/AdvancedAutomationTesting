@@ -13,18 +13,11 @@ public class TestBase : IDisposable
     {
         _testContext = testContext;
 
-        var environment = Environment.GetEnvironmentVariable("TEST_ENVIRONMENT") ?? "dev";
-        var environmentName = environment switch
-        {
-            "dev" => "Development",
-            "prod" => "Production",
-            _ => "Development",
-        };
-
+        var environment = Environment.GetEnvironmentVariable("TEST_ENVIRONMENT") ?? "Development";
         _browserConfiguration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
+            .AddJsonFile($"appsettings.{environment}.json", optional: true)
             .Build();
     }
 
