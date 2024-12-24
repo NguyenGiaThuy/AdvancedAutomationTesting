@@ -9,7 +9,7 @@ jobs:
       TEST_ENVIRONMENT: prod
       TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Pull code
         uses: actions/checkout@v4
