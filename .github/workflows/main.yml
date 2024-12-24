@@ -1,10 +1,11 @@
-name: Production
+name: Test workflow
 on:
   push:
     branches:
       - main
 jobs:
   test:
+    environment: Production
     env:
       TEST_ENVIRONMENT: prod
       TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
