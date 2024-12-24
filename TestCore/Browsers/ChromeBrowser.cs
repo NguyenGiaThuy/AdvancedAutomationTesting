@@ -1,8 +1,26 @@
 namespace TestCore.Browsers;
 
-public class Browser(IWebDriver webDriver) : IBrowser
+public class ChromeBrowser : IBrowser
 {
-    private IWebDriver _webDriver = webDriver;
+    private IWebDriver _webDriver = null!;
+
+    public ChromeBrowser(int implicitTimeout, string? browserOptions)
+    {
+        new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
+
+        if (browserOptions is not null)
+        {
+            var options = new ChromeOptions();
+            options.AddArgument(browserOptions);
+            _webDriver = new ChromeDriver(options);
+        }
+        else
+        {
+            _webDriver = new ChromeDriver();
+        }
+
+        _webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(implicitTimeout);
+    }
 
     public void GoToUrl(string url)
     {

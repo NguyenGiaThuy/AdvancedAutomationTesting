@@ -2,29 +2,27 @@ namespace TestCore.Browsers;
 
 public static class BrowserFactory
 {
-    public static IBrowser MakeBrowser(string launchBrowser, int implicitTimeout)
+    public static IBrowser MakeBrowser(
+        string launchBrowser,
+        int implicitTimeout,
+        string? browserOptions
+    )
     {
-        IWebDriver webDriver;
+        IBrowser browser;
         switch (launchBrowser)
         {
             case "Firefox":
-                new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig());
-                webDriver = new FirefoxDriver();
+                browser = new FirefoxBrowser(implicitTimeout, browserOptions);
                 break;
             case "Chrome":
-                new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
-                webDriver = new ChromeDriver();
+                browser = new ChromeBrowser(implicitTimeout, browserOptions);
                 break;
             case "Edge":
-                new WebDriverManager.DriverManager().SetUpDriver(new EdgeConfig());
-                webDriver = new EdgeDriver();
+                browser = new EdgeBrowser(implicitTimeout, browserOptions);
                 break;
             default:
                 throw new WebDriverException("Invalid browser configuration");
         }
-
-        webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(implicitTimeout);
-        IBrowser browser = new Browser(webDriver);
 
         return browser;
     }

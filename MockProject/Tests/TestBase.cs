@@ -44,7 +44,8 @@ public class TestBase : IDisposable
                 Environment.GetEnvironmentVariable("IMPLICIT_TIMEOUT") != null
                     ? int.Parse(Environment.GetEnvironmentVariable("IMPLICIT_TIMEOUT")!)
                     : int.Parse(_browserConfiguration["ImplicitTimeout"]!);
-            _browser = BrowserFactory.MakeBrowser(launchBrowser, implicitTimeout);
+            var browserOptions = _browserConfiguration["BrowserOptions"];
+            _browser = BrowserFactory.MakeBrowser(launchBrowser, implicitTimeout, browserOptions);
 
             // Configure the base URL, username and password
             _baseUrl = _browserConfiguration["BaseUrl"]!;

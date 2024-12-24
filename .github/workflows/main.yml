@@ -14,6 +14,6 @@ jobs:
       - name: Pull code
         uses: actions/checkout@v4
       - name: Restore dependencies and build
-        run: dotnet restore && dotnet build
+        run: dotnet restore && dotnet build --no-incremental --configuration Release
       - name: Test
-        run: dotnet test --settings=MockProject/.runsettings
+        run: dotnet test --settings MockProject/.runsettings
