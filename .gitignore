@@ -400,4 +400,4 @@ FodyWeavers.xsd
 
 # My custom files
 *.sh
-.runsettings
+.local.runsettings

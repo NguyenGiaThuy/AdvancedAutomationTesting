@@ -1,10 +1,19 @@
-name: First Workflow
-on: workflow_dispatch
+name: Production
+on:
+  push:
+    branches:
+      - main
 jobs:
-  first-job:
+  test:
+    env:
+      TEST_ENVIRONMENT: prod
+      TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
     runs-on: ubuntu-latest
     steps:
-      - name: Print greeting
-        run: echo "Hello World!"
-      - name: Print goodbye
-        run: echo "Done - bye!"
+      - name: Pull code
+        uses: actions/checkout@v4
+      - name: Restore dependencies and build
+        run: dotnet restore && dotnet build
+      - name: Test
+        run: dotnet test --settings=MockProject/.runsettings
