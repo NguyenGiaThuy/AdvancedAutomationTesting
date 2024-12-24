@@ -206,7 +206,9 @@ public class ReportDataTest : TestBase
         Assert.IsFalse(visible);
     }
 
-    [TestMethod("TC_DATA_SECTION_04 - Verify that the data table can be collapsed.")]
+    [TestMethod(
+        "TC_DATA_SECTION_04 - Verify that the report counter matches the total number of records generated."
+    )]
     [TestCategory("TC_DATA_SECTION")]
     public void TestReportCounterMatchesNumOfRows()
     {
