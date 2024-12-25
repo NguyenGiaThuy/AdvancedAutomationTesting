@@ -1,9 +1,8 @@
 global using Microsoft.Extensions.Configuration;
-global using Microsoft.Extensions.Primitives;
 global using OpenQA.Selenium;
 global using OpenQA.Selenium.Chrome;
 global using OpenQA.Selenium.Edge;
 global using OpenQA.Selenium.Firefox;
 global using OpenQA.Selenium.Support.UI;
-global using WebDriverManager.DriverConfigs;
+global using TestCore.Browsers;
 global using WebDriverManager.DriverConfigs.Impl;

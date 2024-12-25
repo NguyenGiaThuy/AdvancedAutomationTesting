@@ -3,27 +3,21 @@ namespace TestCore.Browsers;
 public static class BrowserFactory
 {
     public static IBrowser MakeBrowser(
-        string launchBrowser,
+        BrowserEnum browserType,
         int implicitTimeout,
         string? browserOptions
     )
     {
-        IBrowser browser;
-        switch (launchBrowser)
+        switch (browserType)
         {
-            case "Firefox":
-                browser = new FirefoxBrowser(implicitTimeout, browserOptions);
-                break;
-            case "Chrome":
-                browser = new ChromeBrowser(implicitTimeout, browserOptions);
-                break;
-            case "Edge":
-                browser = new EdgeBrowser(implicitTimeout, browserOptions);
-                break;
+            case BrowserEnum.Firefox:
+                return new FirefoxBrowser(implicitTimeout, browserOptions);
+            case BrowserEnum.Chrome:
+                return new ChromeBrowser(implicitTimeout, browserOptions);
+            case BrowserEnum.Edge:
+                return new EdgeBrowser(implicitTimeout, browserOptions);
             default:
                 throw new WebDriverException("Invalid browser configuration");
         }
-
-        return browser;
     }
 }
