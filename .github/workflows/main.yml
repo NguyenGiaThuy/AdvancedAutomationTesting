@@ -21,8 +21,8 @@ jobs:
       - name: Restore dependencies and build
         run: dotnet restore && dotnet build --no-incremental --configuration Release
 
-      - name: Test
-        run: dotnet test --settings $TEST_DIRECTORY/.runsettings --logger "trx;LogFileName=TestResults.trx"
+      - name: Run tests and generate reports
+        run: dotnet test --settings ${{ env.TEST_DIRECTORY }}/.runsettings --logger "trx;LogFileName=TestResults.trx"
 
       - name: Load test report history
         uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
         with:
           gh_pages: gh-pages
           allure_history: allure-history
-          allure_results: $TEST_DIRECTORY/TestResults
+          allure_results: ${{ env.TEST_DIRECTORY }}/TestResults
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
