@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore dependencies and build
+        id: build
         run: dotnet restore && dotnet build --no-incremental --configuration Release
 
       - name: Run tests and generate reports
@@ -26,7 +27,7 @@ jobs:
 
       - name: Load test report history
         uses: actions/checkout@v4
-        if: always()
+        if: always() && steps.build.outputs.outcome == 'success'
         continue-on-error: true
         with:
           ref: gh-pages
@@ -34,7 +35,7 @@ jobs:
 
       - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
-        if: always()
+        if: always() && steps.build.outputs.outcome == 'success'
         with:
           gh_pages: gh-pages
           allure_history: allure-history
@@ -42,7 +43,7 @@ jobs:
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
-        if: always()
+        if: always() && steps.build.outputs.outcome == 'success'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
