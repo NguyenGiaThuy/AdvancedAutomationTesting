@@ -1,0 +1,49 @@
+name: Development workflow
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  test:
+    environment: Development
+    env:
+      TEST_ENVIRONMENT: Development
+      TEST_DIRECTORY: SeleniumTestFramework
+      TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Restore dependencies and build
+        run: dotnet restore && dotnet build --no-incremental --configuration Release
+
+      - name: Run tests and generate reports
+        run: dotnet test --settings ${{ env.TEST_DIRECTORY }}/.runsettings --logger "trx;LogFileName=TestResults.trx"
+
+      - name: Load test report history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build test report
+        uses: simple-elf/allure-report-action@v1.7
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: ${{ env.TEST_DIRECTORY }}/TestResults
+
+      - name: Publish test report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
