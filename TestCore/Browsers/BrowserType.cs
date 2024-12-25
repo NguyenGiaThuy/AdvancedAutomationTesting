@@ -1,6 +1,6 @@
 namespace TestCore.Browsers;
 
-public enum BrowserEnum
+public enum BrowserType
 {
     Firefox,
     Chrome,
