@@ -1,5 +1,4 @@
 global using System.Net;
-global using Microsoft.Extensions.Configuration;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 global using MockProject.Pages.Home;
 global using MockProject.Pages.Leave.Configure;
@@ -8,3 +7,4 @@ global using MockProject.Pages.Login;
 global using OpenQA.Selenium;
 global using TestCore.Browsers;
 global using TestCore.Exceptions;
+global using TestCore.Helpers;

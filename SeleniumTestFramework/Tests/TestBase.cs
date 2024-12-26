@@ -4,7 +4,8 @@ namespace MockProject.Tests;
 public class TestBase : IDisposable
 {
     protected static TestContext _testContext = null!;
-    protected static IConfiguration _browserConfiguration = null!;
+    protected static BrowserConfiguration _browserConfiguration = null!;
+    protected static BrowserEnvironmentHelper _environmentHelper = null!;
     protected IBrowser _browser = null!;
     protected string _baseUrl = null!;
 
@@ -13,12 +14,13 @@ public class TestBase : IDisposable
     {
         _testContext = testContext;
 
-        var environment = Environment.GetEnvironmentVariable("TEST_ENVIRONMENT") ?? "Development";
-        _browserConfiguration = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{environment}.json", optional: true)
-            .Build();
+        // Configure the browser configuration
+        _environmentHelper = new BrowserEnvironmentHelper();
+        var environment = _environmentHelper.GetTestEnvironment() ?? "Development";
+        _browserConfiguration = new BrowserConfiguration(
+            "appsettings.json",
+            $"appsettings.{environment}.json"
+        );
     }
 
     public TestBase()
@@ -31,19 +33,21 @@ public class TestBase : IDisposable
             _testContext.WriteLine("Current test case: " + _testContext.TestName);
 
             // Configure the browser
-            var launchBrowser =
-                Environment.GetEnvironmentVariable("BROWSER") ?? _browserConfiguration["Browser"]!;
+            var browserType =
+                _environmentHelper.GetBrowserType()
+                ?? _browserConfiguration.GetBrowserType()
+                ?? BrowserType.Firefox;
             var implicitTimeout =
-                Environment.GetEnvironmentVariable("IMPLICIT_TIMEOUT") != null
-                    ? int.Parse(Environment.GetEnvironmentVariable("IMPLICIT_TIMEOUT")!)
-                    : int.Parse(_browserConfiguration["ImplicitTimeout"]!);
-            var browserOptions = _browserConfiguration["BrowserOptions"];
-            _browser = BrowserFactory.MakeBrowser(launchBrowser, implicitTimeout, browserOptions);
+                _environmentHelper.GetImplicitTimeout()
+                ?? _browserConfiguration.GetImplicitTimeout()
+                ?? 0;
+            var browserOptions = _browserConfiguration.GetBrowserOptions();
+            _browser = BrowserFactory.MakeBrowser(browserType, implicitTimeout, browserOptions);
 
             // Configure the base URL, username and password
-            _baseUrl = _browserConfiguration["BaseUrl"]!;
-            var username = Environment.GetEnvironmentVariable("TEST_USERNAME")!;
-            var password = Environment.GetEnvironmentVariable("TEST_PASSWORD")!;
+            _baseUrl = _browserConfiguration.GetBaseUrl()!;
+            var username = _environmentHelper.GetVariable("TEST_USERNAME")!;
+            var password = _environmentHelper.GetVariable("TEST_PASSWORD")!;
 
             // Login with valid username and password
             var loginPage = new LoginPage(_browser, _baseUrl);
