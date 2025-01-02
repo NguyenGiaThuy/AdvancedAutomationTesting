@@ -6,8 +6,10 @@ public class ReportDataTest : TestBase
     private MyLeaveBalanceReportPage _myLeaveBalanceReportPage = null!;
 
     [TestInitialize]
-    public void TestPrecondition()
+    public override void TestPrecondition()
     {
+        base.TestPrecondition();
+
         try
         {
             // Navigate to the My Leave Entitlements and Usage Report page
