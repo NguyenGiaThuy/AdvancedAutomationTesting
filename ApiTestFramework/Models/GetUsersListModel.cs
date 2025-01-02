@@ -1,6 +1,6 @@
 namespace ApiTestFramework.Models;
 
-public class GetUsersListModel
+public record GetUsersListModel
 {
     [JsonProperty("page")]
     public int Page { get; set; }
@@ -20,7 +20,7 @@ public class GetUsersListModel
     [JsonProperty("support")]
     public Support SupportData { get; set; } = default!;
 
-    public class User
+    public record User
     {
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -38,7 +38,7 @@ public class GetUsersListModel
         public string Avatar { get; set; } = default!;
     }
 
-    public class Support
+    public record Support
     {
         [JsonProperty("url")]
         public string Url { get; set; } = default!;

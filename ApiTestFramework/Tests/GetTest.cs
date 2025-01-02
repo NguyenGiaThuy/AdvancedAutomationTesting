@@ -21,8 +21,8 @@ public class GetTest : TestBase
 
     [TestMethod("TC_GET_02 - Verify that the GET method can get a user with valid id.")]
     [TestCategory("TC_GET")]
-    [DataRow("1", DisplayName = "id = '1'")]
-    [DataRow("2", DisplayName = "id = '2'")]
+    [DataRow("1", DisplayName = "id = 1")]
+    [DataRow("2", DisplayName = "id = 2")]
     public async Task TestGetValidUserSuccessfully(string id)
     {
         var response = await _client.Get<GetUserModel>($"/api/user/{id}", CancellationToken.None);
@@ -33,8 +33,8 @@ public class GetTest : TestBase
 
     [TestMethod("TC_GET_03 - Verify that the GET method cannot get a user with invalid id.")]
     [TestCategory("TC_GET")]
-    [DataRow("-1", DisplayName = "id = '-1'")]
-    [DataRow("a", DisplayName = "id = 'a'")]
+    [DataRow("-1", DisplayName = "id = -1")]
+    [DataRow("a", DisplayName = "id = a")]
     [DataRow("", DisplayName = "id = ''")]
     public async Task TestGetInvalidUserUnsuccessfully(string id)
     {
