@@ -35,7 +35,7 @@ public class TestBase
 
             // Configure the client
             _baseUrl = _apiConfiguration.GetBaseUrl()!;
-            _client = ApiFactory.MakeApi(_baseUrl);
+            _client = ApiFactory.MakeApiClient(_baseUrl);
 
             _testContext.WriteLine("Successfully set up REST client");
         }
