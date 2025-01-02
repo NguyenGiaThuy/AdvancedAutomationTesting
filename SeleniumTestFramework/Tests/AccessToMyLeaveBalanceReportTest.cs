@@ -7,8 +7,10 @@ public class AccessToMyLeaveBalanceReportTest : TestBase
     private MyLeaveBalanceReportPage _myLeaveBalanceReportPage = null!;
 
     [TestInitialize]
-    public void TestPrecondition()
+    public override void TestPrecondition()
     {
+        base.TestPrecondition();
+
         try
         {
             // Navigate to the Home page

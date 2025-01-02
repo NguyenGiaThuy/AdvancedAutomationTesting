@@ -1,13 +1,13 @@
 namespace MockProject.Tests;
 
 [TestClass]
-public class TestBase : IDisposable
+public class TestBase
 {
-    protected static TestContext _testContext = null!;
-    protected static BrowserConfiguration _browserConfiguration = null!;
-    protected static BrowserEnvironmentHelper _environmentHelper = null!;
-    protected IBrowser _browser = null!;
-    protected string _baseUrl = null!;
+    protected static TestContext _testContext = default!;
+    protected static BrowserConfiguration _browserConfiguration = default!;
+    protected static BrowserEnvironmentHelper _environmentHelper = default!;
+    protected IBrowser _browser = default!;
+    protected string _baseUrl = default!;
 
     [AssemblyInitialize]
     public static void AssemblyPrecondition(TestContext testContext)
@@ -23,7 +23,8 @@ public class TestBase : IDisposable
         );
     }
 
-    public TestBase()
+    [TestInitialize]
+    public virtual void TestPrecondition()
     {
         try
         {
@@ -61,19 +62,20 @@ public class TestBase : IDisposable
         }
         catch (WebException ex)
         {
-            _testContext.WriteLine("Failed to load page due to connection");
+            _testContext.WriteLine($"Failed to load page due to connection\nEx: {ex}");
             throw new PreconditionException("Failed to load page due to connection", ex);
         }
         catch (NoSuchElementException ex)
         {
-            _testContext.WriteLine("Failed to login");
+            _testContext.WriteLine($"Failed to login\nEx: {ex}");
             throw new PreconditionException("Failed to login", ex);
         }
     }
 
-    public void Dispose()
+    [TestCleanup]
+    public void TestPostcondition()
     {
-        _testContext.WriteLine("Closing browser");
+        _testContext.WriteLine($"Closing browser...");
         _browser.Quit();
     }
 }

@@ -1,23 +1,8 @@
-namespace TestCore.Browsers;
+namespace TestCore.Configurations;
 
-public class BrowserConfiguration
+public class BrowserConfiguration(string defaultConfigFilePath, string environmentConfigFilePath)
+    : ConfigurationBase(defaultConfigFilePath, environmentConfigFilePath)
 {
-    private readonly IConfigurationRoot _configuration;
-
-    public BrowserConfiguration(string defaultConfigFilePath, string environmentConfigFilePath)
-    {
-        _configuration = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile(defaultConfigFilePath, optional: false, reloadOnChange: true)
-            .AddJsonFile(environmentConfigFilePath, optional: true)
-            .Build();
-    }
-
-    public string? GetBaseUrl()
-    {
-        return _configuration["BaseUrl"];
-    }
-
     public int? GetImplicitTimeout()
     {
         return int.TryParse(_configuration["ImplicitTimeout"], out var result) ? result : null;

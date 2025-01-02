@@ -3,71 +3,69 @@ namespace TestCore.Browsers;
 public interface IBrowser
 {
     /// <summary>
-    /// Navigate to the URL
+    /// Navigates the browser to the specified URL.
     /// </summary>
-    /// <param name="url">The URL to navigate to</param>
+    /// <param name="url">The URL to navigate to.</param>
     void GoToUrl(string url);
 
     /// <summary>
-    /// Get the web element
+    /// Finds and retrieves a single web element using the specified locator.
     /// </summary>
-    /// <param name="by">The locator of the web element</param>
-    /// <returns>
-    /// The web element if found
-    /// </returns>
+    /// <param name="by">The locator used to find the web element.</param>
+    /// <returns>The web element if found; otherwise, throws an exception.</returns>
     IWebElement GetWebElement(By by);
 
     /// <summary>
-    /// Get the web elements
+    /// Finds and retrieves all web elements matching the specified locator.
     /// </summary>
-    /// <param name="by">The locator of the web elements</param>
+    /// <param name="by">The locator used to find the web elements.</param>
     /// <returns>
-    /// The web elements if found otherwise return empty list
+    /// A collection of web elements if found; otherwise, an empty list.
     /// </returns>
     IEnumerable<IWebElement> GetWebElements(By by);
 
     /// <summary>
-    /// Try to get the web element until the timeout (in miliseconds) is reached
+    /// Attempts to find a single web element using the specified locator, retrying until the timeout is reached.
     /// </summary>
-    /// <param name="by">The locator of the web element</param>
-    /// <param name="timeout">The timeout in miliseconds</param>
+    /// <param name="by">The locator used to find the web element.</param>
+    /// <param name="timeout">The timeout in milliseconds to wait for the element to appear.</param>
     /// <returns>
-    /// The web element if found
+    /// The web element if found within the timeout; otherwise, throws an exception.
     /// </returns>
     IWebElement TryGetWebElementUntil(By by, int timeout);
 
     /// <summary>
-    /// Try to get the web elements until the timeout (in miliseconds) is reached
+    /// Attempts to find all web elements matching the specified locator, retrying until the timeout is reached.
     /// </summary>
-    /// <param name="by">The locator of the web elements</param>
-    /// <param name="timeout">The timeout in miliseconds</param>
+    /// <param name="by">The locator used to find the web elements.</param>
+    /// <param name="timeout">The timeout in milliseconds to wait for the elements to appear.</param>
     /// <returns>
-    /// The web elements if found, otherwise return empty list
+    /// A collection of web elements if found within the timeout; otherwise, an empty list.
     /// </returns>
     IEnumerable<IWebElement> TryGetWebElementsUntil(By by, int timeout);
 
     /// <summary>
-    /// Check if the web element is visible
+    /// Checks whether the web element specified by the locator is visible within the timeout period.
     /// </summary>
-    /// <param name="by">The locator of the web element</param>
-    /// <param name="timeout">The timeout in miliseconds</param>
+    /// <param name="by">The locator used to find the web element.</param>
+    /// <param name="timeout">The timeout in milliseconds to wait for visibility. Defaults to 1000ms.</param>
     /// <returns>
-    /// True if the web element is visible, otherwise false
+    /// <c>true</c> if the web element is visible within the timeout; otherwise, <c>false</c>.
     /// </returns>
     bool WebElementIsVisibile(By by, int timeout = 1000);
 
     /// <summary>
-    /// Check if the web element is clickable
+    /// Checks whether the web element specified by the locator is clickable within the timeout period.
     /// </summary>
-    /// <param name="by">The locator of the web element</param>
-    /// <param name="timeout">The timeout in miliseconds</param>
+    /// <param name="by">The locator used to find the web element.</param>
+    /// <param name="timeout">The timeout in milliseconds to wait for clickability. Defaults to 1000ms.</param>
     /// <returns>
-    /// True if the web element is clickable, otherwise false
+    /// <c>true</c> if the web element is clickable within the timeout; otherwise, <c>false</c>.
     /// </returns>
-    bool WebElementIsClickable(By by, int timout = 1000);
+    bool WebElementIsClickable(By by, int timeout = 1000);
 
     /// <summary>
-    /// Quit the browser
+    /// Closes the browser and cleans up resources.
     /// </summary>
     void Quit();
 }
