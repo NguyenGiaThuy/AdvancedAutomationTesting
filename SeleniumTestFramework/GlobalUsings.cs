@@ -6,5 +6,6 @@ global using MockProject.Pages.Leave.Reports;
 global using MockProject.Pages.Login;
 global using OpenQA.Selenium;
 global using TestCore.Browsers;
+global using TestCore.Configurations;
 global using TestCore.Exceptions;
 global using TestCore.Helpers;
