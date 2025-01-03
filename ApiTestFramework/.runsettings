@@ -10,13 +10,6 @@
         <!-- Path relative to directory that contains .runsettings file-->
         <ResultsDirectory>./TestResults</ResultsDirectory>
 
-        <!-- Path to Test Adapters -->
-        <!-- <TestAdaptersPaths>%SystemDrive%\Temp\foo;%SystemDrive%\Temp\bar</TestAdaptersPaths> -->
-
-        <!-- TestCaseFilter expression -->
-        <!-- <TestCaseFilter>(TestCategory != Integration) &amp; (TestCategory !=
-        UnfinishedFeature)</TestCaseFilter> -->
-
         <!-- Value that specifies the exit code when no tests are discovered -->
         <TreatNoTestsAsError>true</TreatNoTestsAsError>
     </RunConfiguration>
