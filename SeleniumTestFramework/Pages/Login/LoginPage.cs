@@ -1,4 +1,4 @@
-namespace MockProject.Pages.Login;
+namespace SeleniumTestFramework.Pages.Login;
 
 public class LoginPage(IBrowser browser, string baseUrl)
     : PageBase(browser, $"{baseUrl}/web/index.php/auth/login")

@@ -1,4 +1,4 @@
-namespace MockProject.Pages;
+namespace SeleniumTestFramework.Pages;
 
 public class PageBase(IBrowser browser, string url)
 {

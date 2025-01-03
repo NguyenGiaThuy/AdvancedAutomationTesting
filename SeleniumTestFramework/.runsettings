@@ -30,7 +30,7 @@
         <DeleteDeploymentDirectoryAfterTestRunIsComplete>false</DeleteDeploymentDirectoryAfterTestRunIsComplete>
         <DeploymentEnabled>false</DeploymentEnabled>
         <Parallelize>
-            <Workers>3</Workers>
+            <Workers>2</Workers>
             <Scope>MethodLevel</Scope>
         </Parallelize>
     </MSTest>

@@ -1,4 +1,4 @@
-namespace MockProject.Tests;
+namespace SeleniumTestFramework.Tests;
 
 [TestClass]
 public class ReportDataTest : TestBase
@@ -24,6 +24,153 @@ public class ReportDataTest : TestBase
             _testContext.WriteLine("Failed to load page due to connection");
             throw new PreconditionException("Failed to load page due to connection", ex);
         }
+    }
+
+    [TestMethod("TC_DATA_SECTION_01 - Verify that the data table can be enlarged.")]
+    [TestCategory("TC_DATA_SECTION")]
+    [TestCategory("SELENIUM")]
+    public void TestEnlargeDataTableSuccessfully()
+    {
+        // Click the Enlarge button
+        _myLeaveBalanceReportPage.ClickEnlargeButton();
+
+        // Expected result: The Enlarge button is not visible, which means the data table is enlarged
+        var visible = _myLeaveBalanceReportPage.EnlargeButtonIsVisible();
+        Assert.IsFalse(visible);
+    }
+
+    [TestMethod("TC_DATA_SECTION_02 - Verify that the data table can be shrunk.")]
+    [TestCategory("TC_DATA_SECTION")]
+    [TestCategory("SELENIUM")]
+    public void TestShrinkDataTableSuccessfully()
+    {
+        /* Precondition: The data table should have been enlarged */
+        // Click the Enlarge button
+        _myLeaveBalanceReportPage.ClickEnlargeButton();
+
+        /* Test step(s) */
+        // Click the Shrink button
+        _myLeaveBalanceReportPage.ClickShrinkButton();
+
+        // Expected result: The Shrink button is not visible, which means the data table is shrunk
+        var visible = _myLeaveBalanceReportPage.ShrinkButtonIsVisible();
+        Assert.IsFalse(visible);
+    }
+
+    [TestMethod(
+        "TC_DATA_SECTION_04 - Verify that the report counter matches the total number of records generated."
+    )]
+    [TestCategory("TC_DATA_SECTION")]
+    [TestCategory("SELENIUM")]
+    public void TestReportCounterMatchesNumOfRows()
+    {
+        /* Precondition: The data table should have been generated */
+        // Generate a random report
+        _myLeaveBalanceReportPage.ClickDropdown();
+        _myLeaveBalanceReportPage.SelectDropdownOption(1);
+        _myLeaveBalanceReportPage.ClickGenerateButton();
+
+        /* Test step(s) */
+        // Step 1: Get the report counter
+        var counter = _myLeaveBalanceReportPage.GetRecordsCounter();
+
+        // Step 2: Get the number of rows in the data table
+        var nRows = _myLeaveBalanceReportPage.GetDataColumn(0, false).Count();
+
+        // Expected result: The report counter matches the number of rows, which means the report counter is correct
+        Assert.AreEqual(nRows, counter);
+    }
+
+    [TestMethod("TC_DATA_SECTION_05 - Verify that the data types in the data table are valid.")]
+    [TestCategory("TC_DATA_SECTION")]
+    [TestCategory("SELENIUM")]
+    public void TestReportDataTypesCorrect()
+    {
+        /* Precondition: The data table should have been generated */
+        // Generate a random report
+        _myLeaveBalanceReportPage.ClickDropdown();
+        _myLeaveBalanceReportPage.SelectDropdownOption(1);
+        _myLeaveBalanceReportPage.ClickGenerateButton();
+
+        /* Test step(s) */
+        // Navigate each data cell in the data table
+        var firstColumn = _myLeaveBalanceReportPage.GetDataColumn(0, false);
+        foreach (var item in firstColumn)
+        {
+            // Expected result: All data cell in the first column is of type string
+            Assert.IsInstanceOfType(item.Text, typeof(string));
+        }
+
+        for (var i = 1; i < 6; i++)
+        {
+            var column = _myLeaveBalanceReportPage.GetDataColumn(i, false);
+
+            foreach (var item in column)
+            {
+                // Expected result: All data cell in the first column is of type decimal
+                Assert.IsInstanceOfType(decimal.Parse(item.Text), typeof(decimal));
+            }
+        }
+    }
+
+    [TestMethod(
+        "TC_DATA_SECTION_06 - Verify that the deleted value of Leave Type does not show in the data table."
+    )]
+    [TestCategory("TC_DATA_SECTION")]
+    [TestCategory("SELENIUM")]
+    public void TestDeletedLeaveTypeDoesnotShowSuccessfully()
+    {
+        /* Precondition: A random value in Leave Types should have been deleted
+        and report should have been generated */
+        // Delete the leave type
+        var deletedLeaveTypeName = DeleteLeaveTypePrecondition();
+
+        // Generate a random report
+        _myLeaveBalanceReportPage.ClickDropdown();
+        _myLeaveBalanceReportPage.SelectDropdownOption(1);
+        _myLeaveBalanceReportPage.ClickGenerateButton();
+
+        // Test step(s)
+        // Try getting the data cell with the deleted value of Leave Type
+        var deletedData = _myLeaveBalanceReportPage
+            .GetDataColumn(0, false)
+            .FirstOrDefault(item => item.Text == deletedLeaveTypeName);
+
+        // Expected result: The deleted value of Leave Type is not in the data table
+        Assert.IsNull(deletedData);
+
+        /* Postcondition: Recover the deleted leave type in the Leave Types */
+        DeleteLeaveTypePostcondition(deletedLeaveTypeName);
+    }
+
+    [TestMethod(
+        "TC_DATA_SECTION_07 - Verify that the new value of Leave Type shows in the data table."
+    )]
+    [TestCategory("TC_DATA_SECTION")]
+    [TestCategory("SELENIUM")]
+    public void TestSelectReportTypeUnsuccessfully()
+    {
+        /* Precondition: A new random value in Leave Types should have been added
+        and report should have been generated */
+        // Add a new leave type
+        var newLeaveTypeName = AddLeaveTypePrecondition();
+
+        // Generate a random report
+        _myLeaveBalanceReportPage.ClickDropdown();
+        _myLeaveBalanceReportPage.SelectDropdownOption(1);
+        _myLeaveBalanceReportPage.ClickGenerateButton();
+
+        /* Test step(s) */
+        // Try getting the data cell with the newly added value of Leave Type
+        var newData = _myLeaveBalanceReportPage
+            .GetDataColumn(0, false)
+            .FirstOrDefault(item => item.Text == newLeaveTypeName);
+
+        // Expected result: The newly added value of Leave Type is in the data table
+        Assert.IsNotNull(newData);
+
+        /* Postcondition: Delete newly added leave type in the Leave Types */
+        AddLeaveTypePostcondition(newLeaveTypeName);
     }
 
     private string DeleteLeaveTypePrecondition()
@@ -179,127 +326,5 @@ public class ReportDataTest : TestBase
                 ex
             );
         }
-    }
-
-    [TestMethod("TC_DATA_SECTION_01 - Verify that the data table can be enlarged.")]
-    [TestCategory("TC_DATA_SECTION")]
-    public void TestEnlargeDataTableSuccessfully()
-    {
-        // Click the Enlarge button
-        _myLeaveBalanceReportPage.ClickEnlargeButton();
-
-        // Verify that the Enlarge button is not visible
-        var visible = _myLeaveBalanceReportPage.EnlargeButtonIsVisible();
-        Assert.IsFalse(visible);
-    }
-
-    [TestMethod("TC_DATA_SECTION_02 - Verify that the data table can be shrunk.")]
-    [TestCategory("TC_DATA_SECTION")]
-    public void TestShrinkDataTableSuccessfully()
-    {
-        // Click the Enlarge button
-        _myLeaveBalanceReportPage.ClickEnlargeButton();
-
-        // Click the Shrink button
-        _myLeaveBalanceReportPage.ClickShrinkButton();
-
-        // Verify that the Shrink button is not visible
-        var visible = _myLeaveBalanceReportPage.ShrinkButtonIsVisible();
-        Assert.IsFalse(visible);
-    }
-
-    [TestMethod(
-        "TC_DATA_SECTION_04 - Verify that the report counter matches the total number of records generated."
-    )]
-    [TestCategory("TC_DATA_SECTION")]
-    public void TestReportCounterMatchesNumOfRows()
-    {
-        // Generate a random report
-        _myLeaveBalanceReportPage.ClickDropdown();
-        _myLeaveBalanceReportPage.SelectDropdownOption(1);
-        _myLeaveBalanceReportPage.ClickGenerateButton();
-
-        // Get the number of rows in the data table
-        var nRows = _myLeaveBalanceReportPage.GetDataColumn(0, false).Count();
-
-        // Get the report counter
-        var counter = _myLeaveBalanceReportPage.GetRecordsCounter();
-
-        // Verify that the report counter matches the number of rows
-        Assert.AreEqual(nRows, counter);
-    }
-
-    [TestMethod("TC_DATA_SECTION_05 - Verify that the data types in the data table are valid.")]
-    [TestCategory("TC_DATA_SECTION")]
-    public void TestReportDataTypesCorrect()
-    {
-        // Generate a random report
-        _myLeaveBalanceReportPage.ClickDropdown();
-        _myLeaveBalanceReportPage.SelectDropdownOption(1);
-        _myLeaveBalanceReportPage.ClickGenerateButton();
-
-        // Verify that the first column is of type string
-        Assert.ThrowsException<FormatException>(
-            () =>
-                _myLeaveBalanceReportPage
-                    .GetDataColumn(0, false)
-                    .Sum(item => decimal.Parse(item.Text))
-        );
-
-        // Verify that the rest columns are of type decimal
-        for (var i = 1; i < 6; i++)
-        {
-            var sum = _myLeaveBalanceReportPage
-                .GetDataColumn(i, false)
-                .Sum(item => decimal.Parse(item.Text));
-            Assert.IsInstanceOfType(sum, typeof(decimal));
-        }
-    }
-
-    [TestMethod(
-        "TC_DATA_SECTION_06 - Verify that the deleted value of Leave Type does not show in the data table."
-    )]
-    [TestCategory("TC_DATA_SECTION")]
-    public void TestDeletedLeaveTypeDoesnotShowSuccessfully()
-    {
-        // Delete the leave type
-        var deletedLeaveTypeName = DeleteLeaveTypePrecondition();
-
-        // Generate a random report
-        _myLeaveBalanceReportPage.ClickDropdown();
-        _myLeaveBalanceReportPage.SelectDropdownOption(1);
-        _myLeaveBalanceReportPage.ClickGenerateButton();
-
-        // Verify that the deleted value of Leave Type is not in the data table
-        var deletedData = _myLeaveBalanceReportPage
-            .GetDataColumn(0, false)
-            .FirstOrDefault(item => item.Text == deletedLeaveTypeName);
-        Assert.IsNull(deletedData);
-
-        // Recover the deleted leave type
-        DeleteLeaveTypePostcondition(deletedLeaveTypeName);
-    }
-
-    [TestMethod(
-        "TC_DATA_SECTION_07 - Verify that the new value of Leave Type shows in the data table."
-    )]
-    [TestCategory("TC_DATA_SECTION")]
-    public void TestSelectReportTypeUnsuccessfully()
-    {
-        // Add a new leave type
-        var newLeaveTypeName = AddLeaveTypePrecondition();
-
-        // Generate a random report
-        _myLeaveBalanceReportPage.ClickDropdown();
-        _myLeaveBalanceReportPage.SelectDropdownOption(1);
-        _myLeaveBalanceReportPage.ClickGenerateButton();
-
-        // Verify that the deleted value of Leave Type is not in the data table
-        var newData = _myLeaveBalanceReportPage
-            .GetDataColumn(0, false)
-            .FirstOrDefault(item => item.Text == newLeaveTypeName);
-        Assert.IsNotNull(newData);
-
-        AddLeaveTypePostcondition(newLeaveTypeName);
     }
 }

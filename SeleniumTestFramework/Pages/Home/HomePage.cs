@@ -1,4 +1,4 @@
-namespace MockProject.Pages.Home;
+namespace SeleniumTestFramework.Pages.Home;
 
 public class HomePage(IBrowser browser, string baseUrl)
     : PageBase(browser, $"{baseUrl}/web/index.php")

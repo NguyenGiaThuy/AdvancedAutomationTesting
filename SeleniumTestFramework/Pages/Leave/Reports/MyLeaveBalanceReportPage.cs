@@ -1,4 +1,4 @@
-namespace MockProject.Pages.Leave.Reports;
+namespace SeleniumTestFramework.Pages.Leave.Reports;
 
 public class MyLeaveBalanceReportPage(IBrowser browser, string baseUrl)
     : PageBase(browser, $"{baseUrl}/web/index.php/leave/viewMyLeaveBalanceReport")

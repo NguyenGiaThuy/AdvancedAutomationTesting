@@ -1,4 +1,4 @@
-namespace MockProject.Pages.Leave.Configure;
+namespace SeleniumTestFramework.Pages.Leave.Configure;
 
 public class LeaveTypesPage(IBrowser browser, string baseUrl)
     : PageBase(browser, $"{baseUrl}/web/index.php/leave/leaveTypeList")

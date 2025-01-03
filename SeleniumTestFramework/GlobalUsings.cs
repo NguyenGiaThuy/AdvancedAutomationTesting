@@ -1,10 +1,10 @@
 global using System.Net;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
-global using MockProject.Pages.Home;
-global using MockProject.Pages.Leave.Configure;
-global using MockProject.Pages.Leave.Reports;
-global using MockProject.Pages.Login;
 global using OpenQA.Selenium;
+global using SeleniumTestFramework.Pages.Home;
+global using SeleniumTestFramework.Pages.Leave.Configure;
+global using SeleniumTestFramework.Pages.Leave.Reports;
+global using SeleniumTestFramework.Pages.Login;
 global using TestCore.Browsers;
 global using TestCore.Configurations;
 global using TestCore.Exceptions;

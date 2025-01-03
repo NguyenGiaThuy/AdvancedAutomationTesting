@@ -1,4 +1,4 @@
-namespace MockProject.Tests;
+namespace SeleniumTestFramework.Tests;
 
 [TestClass]
 public class TestBase
