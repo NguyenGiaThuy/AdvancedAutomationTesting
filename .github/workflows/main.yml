@@ -24,6 +24,16 @@ jobs:
       - name: Restore dependencies and build
         run: dotnet restore && dotnet build --no-incremental --configuration Release
 
+      - name: Cache build output
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./bin
+            ./obj
+          key: ${{ runner.os }}-build-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
       - name: Run tests and generate reports
         run: dotnet test --settings ${{ env.TEST_DIRECTORY }}/.runsettings --logger "trx;LogFileName=TestResults.trx" --filter SELENIUM
 
