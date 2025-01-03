@@ -25,7 +25,7 @@ jobs:
         run: dotnet restore && dotnet build --no-incremental --configuration Release
 
       - name: Run tests and generate reports
-        run: dotnet test --settings ${{ env.TEST_DIRECTORY }}/.runsettings --logger "trx;LogFileName=TestResults.trx" --fitler SELENIUM
+        run: dotnet test --settings ${{ env.TEST_DIRECTORY }}/.runsettings --logger "trx;LogFileName=TestResults.trx" --filter SELENIUM
 
       - name: Load test report history
         uses: actions/checkout@v4
