@@ -1,0 +1,48 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      dotnet: 8.0
+    commands:
+      - echo "Installing dependencies..."
+
+  pre_build:
+    commands:
+      - echo "Restoring dependencies..."
+      - dotnet restore ApiTestFramework/ApiTestFramework.csproj
+      - dotnet restore TestCore/TestCore.csproj
+
+  build:
+    commands:
+      - echo "Building TestCore..."
+      - dotnet build TestCore/TestCore.csproj --no-incremental --configuration Release
+      - echo "Building ApiTestFramework..."
+      - dotnet build ApiTestFramework/ApiTestFramework.csproj --no-incremental --configuration Release
+
+  post_build:
+    commands:
+      - echo "Running tests..."
+      - dotnet test --settings ${TEST_DIRECTORY}/.runsettings --logger "trx;LogFileName=TestResults.trx" --filter API
+
+artifacts:
+  files:
+    - '**/*'
+    - '!**/obj/**'
+    - '!**/bin/**'
+  discard-paths: no
+  base-directory: .
+
+cache:
+  paths:
+    - '!**/bin/Debug/**'
+    - '!**/obj/Debug/**'
+    - ApiTestFramework/bin
+    - ApiTestFramework/obj
+    - TestCore/bin
+    - TestCore/obj
+  type: LOCAL
+  modes:
+    - LOCAL_CUSTOM_CACHE
+  override:
+    key: $CODEBUILD_SRC_DIR-${{ md5sum(ApiTestFramework/ApiTestFramework.csproj TestCore/TestCore.csproj) }}
