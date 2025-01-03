@@ -5,6 +5,7 @@ public class CreateTest : TestBase
 {
     [TestMethod("TC_CREATE_01 - Verify that the POST method can create a new user.")]
     [TestCategory("TC_CREATE")]
+    [TestCategory("API")]
     [DataRow(["testuser1", "sdet"], DisplayName = "name = testuser1, job = sdet")]
     [DataRow(["testuser2", "dev"], DisplayName = "name = testuser2, job = dev")]
     public async Task TestCreateNewUserSuccessfully(string[] parameters)
@@ -25,6 +26,7 @@ public class CreateTest : TestBase
         "TC_CREATE_02 - Verify that the POST method cannot create a new user with invalid details."
     )]
     [TestCategory("TC_CREATE")]
+    [TestCategory("API")]
     public async Task TestCreateInvalidUserUnsuccessfully()
     {
         // Use response model to create a user with invalid details
