@@ -22,15 +22,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore dependencies and build
-        run: dotnet restore && dotnet build --no-incremental --configuration Release
+        run: |
+          dotnet restore TestCore/TestCore.csproj
+          dotnet restore SeleniumTestFramework/SeleniumTestFramework.csproj
+          dotnet build TestCore/TestCore.csproj --no-incremental --configuration Release
+          dotnet build SeleniumTestFramework/SeleniumTestFramework.csproj --no-incremental --configuration Release
 
       - name: Cache build output
         uses: actions/cache@v3
         with:
           path: |
-            ./bin
-            ./obj
-          key: ${{ runner.os }}-build-${{ hashFiles('**/*.csproj') }}
+            ./TestCore/bin
+            ./TestCore/obj
+            ./SeleniumTestFramework/bin
+            ./SeleniumTestFramework/obj
+          key: ${{ runner.os }}-build-${{ hashFiles('**/TestCore/*.csproj', '**/SeleniumTestFramework/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-build-
 
