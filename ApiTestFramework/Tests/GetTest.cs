@@ -11,7 +11,8 @@ public class GetTest : TestBase
     [DataRow("?page=1&per_page=12", DisplayName = "page = 1, per_page = 12")]
     public async Task TestGetUsersListSuccessfully(string parameters)
     {
-        _reportHelper.LogMessage(
+        ReportHelper.LogMessage(
+            _test,
             Status.Info,
             $"Getting users list with query string: {parameters}"
         );
@@ -32,7 +33,7 @@ public class GetTest : TestBase
     [DataRow("2", DisplayName = "id = 2")]
     public async Task TestGetValidUserSuccessfully(string id)
     {
-        _reportHelper.LogMessage(Status.Info, $"Getting a valid user with id: {id}");
+        ReportHelper.LogMessage(_test, Status.Info, $"Getting a valid user with id: {id}");
 
         var response = await _client.Get<GetUserModel>($"/api/user/{id}", CancellationToken.None);
 
@@ -48,7 +49,7 @@ public class GetTest : TestBase
     [DataRow("", DisplayName = "id = ''")]
     public async Task TestGetInvalidUserUnsuccessfully(string id)
     {
-        _reportHelper.LogMessage(Status.Info, $"Getting an invalid user with id: {id}");
+        ReportHelper.LogMessage(_test, Status.Info, $"Getting an invalid user with id: {id}");
 
         var response = await _client.Get<GetUserModel>($"/api/user/{id}", CancellationToken.None);
 

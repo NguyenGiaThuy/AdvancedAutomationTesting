@@ -10,7 +10,7 @@ public class DeleteTest : TestBase
     [DataRow("2", DisplayName = "id = 2")]
     public async Task TestDeleteUserSuccessfully(string id)
     {
-        _reportHelper.LogMessage(Status.Info, $"Deleting a valid user with id: {id}");
+        ReportHelper.LogMessage(_test, Status.Info, $"Deleting a valid user with id: {id}");
 
         var response = await _client.Delete<string?>($"/api/users/{id}", CancellationToken.None);
 
@@ -26,7 +26,7 @@ public class DeleteTest : TestBase
     [DataRow("", DisplayName = "id = ''")]
     public async Task TestDeleteInvalidUserUnsuccessfully(string id)
     {
-        _reportHelper.LogMessage(Status.Info, $"Deleting an invalid user with id: {id}");
+        ReportHelper.LogMessage(_test, Status.Info, $"Deleting an invalid user with id: {id}");
 
         var response = await _client.Delete<string?>($"/api/users/{id}", CancellationToken.None);
 

@@ -27,7 +27,7 @@ phases:
 
 artifacts:
   files:
-    - 'ApiTestFramework/TestResults/**'
+    - 'bin/**'
   discard-paths: no
   base-directory: .
   name: artifact-$(date +%Y-%m-%d)

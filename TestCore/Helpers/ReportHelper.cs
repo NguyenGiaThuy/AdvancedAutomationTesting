@@ -2,54 +2,41 @@ namespace TestCore.Helpers;
 
 public class ReportHelper
 {
-    private ExtentReports _extent = default!;
-    private ExtentTest _test = default!;
+    private static ExtentReports _extent = default!;
 
-    public void InitializeReport(string reportDir, string reportFile)
+    public static void InitializeReport(string reportDir, string reportFile)
     {
-        _extent = new ExtentReports();
-
-        if (!Directory.Exists(Path.Combine(AppContext.BaseDirectory, reportDir)))
+        if (_extent != null)
         {
-            Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, reportDir));
+            return;
         }
+
         var reportPath = Path.Combine(
             Path.Combine(AppContext.BaseDirectory, reportDir),
-            $"{reportFile}-{DateTime.Now.ToFileTimeUtc()}.html"
+            $"{reportFile}_{DateTime.UtcNow:dd-MM-yyyy}.html"
         );
-        var spark = new ExtentSparkReporter(reportPath);
 
+        if (!Directory.Exists(reportDir))
+        {
+            Directory.CreateDirectory(reportDir);
+        }
+
+        var spark = new ExtentSparkReporter(reportPath);
+        _extent = new ExtentReports();
         _extent.AttachReporter(spark);
     }
 
-    public void CreateTestCase(string testCaseTilte, string testCaseDescription)
+    public static ExtentTest CreateTest(string testCaseTitle, string testCaseDescription = "")
     {
-        _test = _extent.CreateTest(testCaseTilte, testCaseDescription);
+        return _extent.CreateTest(testCaseTitle, testCaseDescription);
     }
 
-    public void LogMessage(Status status, string detail)
+    public static void LogMessage(ExtentTest test, Status status, string detail)
     {
-        switch (status)
-        {
-            case Status.Pass:
-                _test.Pass(detail);
-                break;
-            case Status.Fail:
-                _test.Fail(detail);
-                break;
-            case Status.Warning:
-                _test.Warning(detail);
-                break;
-            case Status.Info:
-                _test.Info(detail);
-                break;
-            default:
-                _test.Info(detail);
-                break;
-        }
+        test.Log(status, detail);
     }
 
-    public void ExportReport()
+    public static void GenerateReport()
     {
         _extent.Flush();
     }

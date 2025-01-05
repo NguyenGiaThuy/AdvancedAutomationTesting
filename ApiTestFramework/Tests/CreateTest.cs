@@ -12,7 +12,8 @@ public class CreateTest : TestBase
     {
         var name = parameters[0];
         var job = parameters[1];
-        _reportHelper.LogMessage(
+        ReportHelper.LogMessage(
+            _test,
             Status.Info,
             $"Creating a new user with name = {name} and job = {job}"
         );
@@ -38,7 +39,8 @@ public class CreateTest : TestBase
     {
         var name = "testuser1";
         var job = "sdet";
-        _reportHelper.LogMessage(
+        ReportHelper.LogMessage(
+            _test,
             Status.Info,
             $"Creating a new user with name = {name} and job = {job}"
         );

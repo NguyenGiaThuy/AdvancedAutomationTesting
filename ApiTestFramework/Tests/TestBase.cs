@@ -3,17 +3,17 @@ namespace ApiTestFramework.Tests;
 [TestClass]
 public class TestBase
 {
-    protected static TestContext _testContext = default!;
+    public TestContext TestContext { get; set; } = default!;
     protected static ApiConfiguration _apiConfiguration = default!;
     protected static ApiEnvironmentHelper _environmentHelper = default!;
-    protected static ReportHelper _reportHelper = default!;
     protected IApiClient _client = default!;
     protected string _baseUrl = default!;
+    protected ExtentTest _test = default!;
 
     [AssemblyInitialize]
     public static void AssemblyPrecondition(TestContext testContext)
     {
-        _testContext = testContext;
+        // _testContext = testContext;
 
         // Configure the browser configuration
         _environmentHelper = new ApiEnvironmentHelper();
@@ -22,28 +22,12 @@ public class TestBase
             "appsettings.json",
             $"appsettings.{environment}.json"
         );
-    }
 
-    [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
-    public static void ClassPrecondition(TestContext testContext)
-    {
-        try
-        {
-            // Configure report
-            _testContext.WriteLine("Setting up report...");
-            _reportHelper = new ReportHelper();
-            _reportHelper.InitializeReport(
-                _apiConfiguration.GetReportDir()!,
-                _apiConfiguration.GetReportFile()!
-            );
-
-            _testContext.WriteLine("Successfully set up report");
-        }
-        catch (Exception ex)
-        {
-            _testContext.WriteLine("Failed to set up report");
-            throw new PreconditionException("Failed to set up report", ex);
-        }
+        // Configure report
+        ReportHelper.InitializeReport(
+            _apiConfiguration.GetReportDir()!,
+            _apiConfiguration.GetReportFile()!
+        );
     }
 
     [TestInitialize]
@@ -51,13 +35,11 @@ public class TestBase
     {
         try
         {
-            _testContext.WriteLine(
-                "Current test suite: " + _testContext.FullyQualifiedTestClassName
-            );
-            _testContext.WriteLine("Current test case: " + _testContext.TestName);
+            TestContext.WriteLine("Current test suite: " + TestContext.FullyQualifiedTestClassName);
+            TestContext.WriteLine("Current test case: " + TestContext.TestName);
 
             // Create test case info for report
-            var testMethodName = _testContext.TestName;
+            var testMethodName = TestContext.TestName;
             var method = GetType()
                 .GetMethods()
                 .FirstOrDefault(method =>
@@ -69,19 +51,19 @@ public class TestBase
                 .Cast<TestMethodAttribute>()
                 .FirstOrDefault();
             var testMethodDescription = testMethodAttribute?.DisplayName ?? testMethodName;
-            _reportHelper.CreateTestCase(testMethodName!, testMethodDescription!);
+            _test = ReportHelper.CreateTest(testMethodName!, testMethodDescription!);
 
             // Configure the client
-            _testContext.WriteLine("Setting up REST client...");
+            TestContext.WriteLine("Setting up REST client...");
 
             _baseUrl = _apiConfiguration.GetBaseUrl()!;
             _client = ApiFactory.MakeApiClient(_baseUrl);
 
-            _testContext.WriteLine("Successfully set up REST client");
+            TestContext.WriteLine("Successfully set up REST client");
         }
         catch (Exception ex)
         {
-            _testContext.WriteLine("Failed to set up REST client");
+            TestContext.WriteLine("Failed to set up REST client");
             throw new PreconditionException("Failed to set up REST client", ex);
         }
     }
@@ -89,22 +71,21 @@ public class TestBase
     [TestCleanup]
     public virtual void TestPostcondition()
     {
-        if (_testContext.CurrentTestOutcome == UnitTestOutcome.Failed)
-        {
-            _reportHelper.LogMessage(Status.Fail, "Test case failed");
-        }
-        else
-        {
-            _reportHelper.LogMessage(Status.Pass, "Test case passed");
-        }
+        var status =
+            TestContext.CurrentTestOutcome == UnitTestOutcome.Failed ? Status.Fail : Status.Pass;
+        ReportHelper.LogMessage(
+            _test,
+            status,
+            $"Test case {TestContext.TestName} {status.ToString().ToLower()}."
+        );
 
-        _testContext.WriteLine("Closing REST client...");
+        TestContext.WriteLine("Closing REST client...");
         _client.Dispose();
     }
 
-    [ClassCleanup(InheritanceBehavior.BeforeEachDerivedClass, ClassCleanupBehavior.EndOfClass)]
-    public static void ClassPostcondition()
+    [AssemblyCleanup]
+    public static void AssemblyPostcondition()
     {
-        _reportHelper.ExportReport();
+        ReportHelper.GenerateReport();
     }
 }

@@ -18,7 +18,8 @@ public class LoginTest : TestBase
     {
         var email = parameters[0];
         var password = parameters[1];
-        _reportHelper.LogMessage(
+        ReportHelper.LogMessage(
+            _test,
             Status.Info,
             $"Logging in with email: {email}\nLogging in with password: {password}"
         );
@@ -46,7 +47,8 @@ public class LoginTest : TestBase
     {
         var email = parameters[0];
         var password = parameters[1];
-        _reportHelper.LogMessage(
+        ReportHelper.LogMessage(
+            _test,
             Status.Info,
             $"Logging in with email: {email}\nLogging in with password: {password}"
         );

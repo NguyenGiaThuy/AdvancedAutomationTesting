@@ -18,7 +18,8 @@ public class RegisterTest : TestBase
     {
         var email = parameters[0];
         var password = parameters[1];
-        _reportHelper.LogMessage(
+        ReportHelper.LogMessage(
+            _test,
             Status.Info,
             $"Registering with email: {email}\nRegistering with password: {password}"
         );
@@ -46,7 +47,8 @@ public class RegisterTest : TestBase
     {
         var email = parameters[0];
         var password = parameters[1];
-        _reportHelper.LogMessage(
+        ReportHelper.LogMessage(
+            _test,
             Status.Info,
             $"Registering with email: {email}\nRegistering with password: {password}"
         );
