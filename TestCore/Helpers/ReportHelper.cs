@@ -1,6 +1,6 @@
 namespace TestCore.Helpers;
 
-public class ReportHelper
+public static class ReportHelper
 {
     private static ExtentReports _extent = default!;
 
@@ -26,7 +26,7 @@ public class ReportHelper
         _extent.AttachReporter(spark);
     }
 
-    public static ExtentTest CreateTest(string testCaseTitle, string testCaseDescription = "")
+    public static ExtentTest CreateTest(string testCaseTitle, string testCaseDescription)
     {
         return _extent.CreateTest(testCaseTitle, testCaseDescription);
     }

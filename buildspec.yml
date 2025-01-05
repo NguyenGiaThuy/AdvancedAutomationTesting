@@ -23,7 +23,12 @@ phases:
   post_build:
     commands:
       - echo "Running tests..."
-      - dotnet test --settings ${TEST_DIRECTORY}/.runsettings --logger "trx;LogFileName=TestResults.trx" --filter API
+      - |
+        dotnet test \
+          --settings ${TEST_DIRECTORY}/.runsettings \
+          --logger "trx;LogFileName=TestResults.trx" \
+          --filter API \
+          --configuration Release
 
 artifacts:
   files:

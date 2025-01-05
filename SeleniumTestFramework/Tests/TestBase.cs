@@ -43,7 +43,7 @@ public class TestBase
             var browserOptions = _browserConfiguration.GetBrowserOptions();
             _browser = BrowserFactory.MakeBrowser(browserType, implicitTimeout, browserOptions);
 
-            // Configure the base URL, username and password
+            // Configure the page base URL, username and password
             _baseUrl = _browserConfiguration.GetBaseUrl()!;
             var username = _environmentHelper.GetVariable("TEST_USERNAME")!;
             var password = _environmentHelper.GetVariable("TEST_PASSWORD")!;
