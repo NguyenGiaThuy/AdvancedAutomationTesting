@@ -8,7 +8,7 @@
         <MaxCpuCount>1</MaxCpuCount>
 
         <!-- Path relative to directory that contains .runsettings file-->
-        <ResultsDirectory>./TestResults</ResultsDirectory>
+        <!-- <ResultsDirectory>./TestResults</ResultsDirectory> -->
 
         <!-- Value that specifies the exit code when no tests are discovered -->
         <TreatNoTestsAsError>true</TreatNoTestsAsError>

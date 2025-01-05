@@ -1,4 +1,6 @@
 global using System.Net;
+global using AventStack.ExtentReports;
+global using AventStack.ExtentReports.Reporter;
 global using Microsoft.Extensions.Configuration;
 global using Newtonsoft.Json;
 global using OpenQA.Selenium;

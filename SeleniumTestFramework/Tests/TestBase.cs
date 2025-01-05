@@ -34,6 +34,8 @@ public class TestBase
             _testContext.WriteLine("Current test case: " + _testContext.TestName);
 
             // Configure the browser
+            _testContext.WriteLine("Logging in...");
+
             var browserType =
                 _environmentHelper.GetBrowserType()
                 ?? _browserConfiguration.GetBrowserType()

@@ -16,11 +16,14 @@ public class LoginTest : TestBase
     )]
     public async Task TestLoginUserSuccessfully(string[] parameters)
     {
-        var requestBody = new LoginUserRequestModel
-        {
-            Email = parameters[0],
-            Password = parameters[1],
-        };
+        var email = parameters[0];
+        var password = parameters[1];
+        _reportHelper.LogMessage(
+            Status.Info,
+            $"Logging in with email: {email}\nLogging in with password: {password}"
+        );
+
+        var requestBody = new LoginUserRequestModel { Email = email, Password = password };
 
         var response = await _client.Post<LoginUserRequestModel, LoginUserResponseModel>(
             $"/api/login",
@@ -41,11 +44,14 @@ public class LoginTest : TestBase
     [DataRow(["", "testpassword2"], DisplayName = "email = '', password = testpassword2")]
     public async Task TestLoginInvalidUserUnsuccessfully(string[] parameters)
     {
-        var requestBody = new LoginUserRequestModel
-        {
-            Email = parameters[0],
-            Password = parameters[1],
-        };
+        var email = parameters[0];
+        var password = parameters[1];
+        _reportHelper.LogMessage(
+            Status.Info,
+            $"Logging in with email: {email}\nLogging in with password: {password}"
+        );
+
+        var requestBody = new LoginUserRequestModel { Email = email, Password = password };
 
         var response = await _client.Post<LoginUserRequestModel, LoginUserResponseModel>(
             $"/api/register",

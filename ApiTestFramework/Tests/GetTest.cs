@@ -11,6 +11,11 @@ public class GetTest : TestBase
     [DataRow("?page=1&per_page=12", DisplayName = "page = 1, per_page = 12")]
     public async Task TestGetUsersListSuccessfully(string parameters)
     {
+        _reportHelper.LogMessage(
+            Status.Info,
+            $"Getting users list with query string: {parameters}"
+        );
+
         var response = await _client.Get<GetUsersListModel>(
             $"/api/users{parameters}",
             CancellationToken.None
@@ -27,6 +32,8 @@ public class GetTest : TestBase
     [DataRow("2", DisplayName = "id = 2")]
     public async Task TestGetValidUserSuccessfully(string id)
     {
+        _reportHelper.LogMessage(Status.Info, $"Getting a valid user with id: {id}");
+
         var response = await _client.Get<GetUserModel>($"/api/user/{id}", CancellationToken.None);
 
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -41,6 +48,8 @@ public class GetTest : TestBase
     [DataRow("", DisplayName = "id = ''")]
     public async Task TestGetInvalidUserUnsuccessfully(string id)
     {
+        _reportHelper.LogMessage(Status.Info, $"Getting an invalid user with id: {id}");
+
         var response = await _client.Get<GetUserModel>($"/api/user/{id}", CancellationToken.None);
 
         Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);

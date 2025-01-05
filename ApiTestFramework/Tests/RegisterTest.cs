@@ -16,11 +16,14 @@ public class RegisterTest : TestBase
     )]
     public async Task TestRegisterNewUserSuccessfully(string[] parameters)
     {
-        var requestBody = new RegisterUserRequestModel
-        {
-            Email = parameters[0],
-            Password = parameters[1],
-        };
+        var email = parameters[0];
+        var password = parameters[1];
+        _reportHelper.LogMessage(
+            Status.Info,
+            $"Registering with email: {email}\nRegistering with password: {password}"
+        );
+
+        var requestBody = new RegisterUserRequestModel { Email = email, Password = password };
 
         var response = await _client.Post<RegisterUserRequestModel, RegisterUserResponseModel>(
             $"/api/register",
@@ -41,11 +44,14 @@ public class RegisterTest : TestBase
     [DataRow(["", "testpassword2"], DisplayName = "email = '', password = testpassword2")]
     public async Task TestRegisterInvalidUserUnsuccessfully(string[] parameters)
     {
-        var requestBody = new RegisterUserRequestModel
-        {
-            Email = parameters[0],
-            Password = parameters[1],
-        };
+        var email = parameters[0];
+        var password = parameters[1];
+        _reportHelper.LogMessage(
+            Status.Info,
+            $"Registering with email: {email}\nRegistering with password: {password}"
+        );
+
+        var requestBody = new RegisterUserRequestModel { Email = email, Password = password };
 
         var response = await _client.Post<RegisterUserRequestModel, RegisterUserResponseModel>(
             $"/api/register",

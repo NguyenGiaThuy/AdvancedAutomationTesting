@@ -10,7 +10,14 @@ public class CreateTest : TestBase
     [DataRow(["testuser2", "dev"], DisplayName = "name = testuser2, job = dev")]
     public async Task TestCreateNewUserSuccessfully(string[] parameters)
     {
-        var requestBody = new CreateUserRequestModel { Name = parameters[0], Job = parameters[1] };
+        var name = parameters[0];
+        var job = parameters[1];
+        _reportHelper.LogMessage(
+            Status.Info,
+            $"Creating a new user with name = {name} and job = {job}"
+        );
+
+        var requestBody = new CreateUserRequestModel { Name = name, Job = job };
 
         var response = await _client.Post<CreateUserRequestModel, CreateUserResponseModel>(
             $"/api/users",
@@ -29,11 +36,18 @@ public class CreateTest : TestBase
     [TestCategory("API")]
     public async Task TestCreateInvalidUserUnsuccessfully()
     {
+        var name = "testuser1";
+        var job = "sdet";
+        _reportHelper.LogMessage(
+            Status.Info,
+            $"Creating a new user with name = {name} and job = {job}"
+        );
+
         // Use response model to create a user with invalid details
         var requestBody = new CreateUserResponseModel
         {
-            Name = "testuser1",
-            Job = "sdet",
+            Name = name,
+            Job = job,
             Id = 1,
             CreatedAt = "2021-09-01T00:00:00.000Z",
         };
