@@ -3,7 +3,7 @@ namespace SeleniumTestFramework.Tests;
 [TestClass]
 public class TestBase
 {
-    protected static TestContext _testContext = default!;
+    public TestContext TestContext { get; set; } = default!;
     protected static BrowserConfiguration _browserConfiguration = default!;
     protected static BrowserEnvironmentHelper _environmentHelper = default!;
     protected IBrowser _browser = default!;
@@ -12,8 +12,6 @@ public class TestBase
     [AssemblyInitialize]
     public static void AssemblyPrecondition(TestContext testContext)
     {
-        _testContext = testContext;
-
         // Configure the browser configuration
         _environmentHelper = new BrowserEnvironmentHelper();
         var environment = _environmentHelper.GetTestEnvironment() ?? "Development";
@@ -28,13 +26,11 @@ public class TestBase
     {
         try
         {
-            _testContext.WriteLine(
-                "Current test suite: " + _testContext.FullyQualifiedTestClassName
-            );
-            _testContext.WriteLine("Current test case: " + _testContext.TestName);
+            TestContext.WriteLine("Current test suite: " + TestContext.FullyQualifiedTestClassName);
+            TestContext.WriteLine("Current test case: " + TestContext.TestName);
 
             // Configure the browser
-            _testContext.WriteLine("Logging in...");
+            TestContext.WriteLine("Logging in...");
 
             var browserType =
                 _environmentHelper.GetBrowserType()
@@ -60,16 +56,16 @@ public class TestBase
             // Locate the profile picture to verify that the user is logged in
             var homePage = new HomePage(_browser, _baseUrl);
             homePage.GetProfilePicture();
-            _testContext.WriteLine("Successfully logged in");
+            TestContext.WriteLine("Successfully logged in");
         }
         catch (WebException ex)
         {
-            _testContext.WriteLine($"Failed to load page due to connection\nEx: {ex}");
+            TestContext.WriteLine($"Failed to load page due to connection\nEx: {ex}");
             throw new PreconditionException("Failed to load page due to connection", ex);
         }
         catch (NoSuchElementException ex)
         {
-            _testContext.WriteLine($"Failed to login\nEx: {ex}");
+            TestContext.WriteLine($"Failed to login\nEx: {ex}");
             throw new PreconditionException("Failed to login", ex);
         }
     }
@@ -77,7 +73,7 @@ public class TestBase
     [TestCleanup]
     public void TestPostcondition()
     {
-        _testContext.WriteLine($"Closing browser...");
+        TestContext.WriteLine($"Closing browser...");
         _browser.Quit();
     }
 }

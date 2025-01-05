@@ -15,13 +15,13 @@ public class GenerateReportTest : TestBase
             // Navigate to the My Leave Entitlements and Usage Report page
             _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _myLeaveBalanceReportPage.GoToPage();
-            _testContext.WriteLine(
+            TestContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
             );
         }
         catch (WebException ex)
         {
-            _testContext.WriteLine("Failed to load page due to connection");
+            TestContext.WriteLine("Failed to load page due to connection");
             throw new PreconditionException("Failed to load page due to connection", ex);
         }
     }

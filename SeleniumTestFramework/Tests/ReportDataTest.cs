@@ -15,13 +15,13 @@ public class ReportDataTest : TestBase
             // Navigate to the My Leave Entitlements and Usage Report page
             _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _myLeaveBalanceReportPage.GoToPage();
-            _testContext.WriteLine(
+            TestContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
             );
         }
         catch (WebException ex)
         {
-            _testContext.WriteLine("Failed to load page due to connection");
+            TestContext.WriteLine("Failed to load page due to connection");
             throw new PreconditionException("Failed to load page due to connection", ex);
         }
     }
@@ -180,7 +180,7 @@ public class ReportDataTest : TestBase
             // Navigate to the Leave Types page
             var leaveTypesPage = new LeaveTypesPage(_browser, _baseUrl);
             leaveTypesPage.GoToPage();
-            _testContext.WriteLine("Successfully navigated to the Leave Types page");
+            TestContext.WriteLine("Successfully navigated to the Leave Types page");
 
             // Get the first Leave Type name
             var leaveTypeName = leaveTypesPage.GetLeaveTypeNameByIndex(0);
@@ -188,12 +188,12 @@ public class ReportDataTest : TestBase
             // Delete the first Leave Type
             leaveTypesPage.ClickDeleteLeaveTypeButtonByIndex(0);
             leaveTypesPage.ClickConfirmDeleteButton();
-            _testContext.WriteLine($"Successfully deleted the leave type: {leaveTypeName}");
+            TestContext.WriteLine($"Successfully deleted the leave type: {leaveTypeName}");
 
             // Navigate to the My Leave Entitlements and Usage Report page
             _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _myLeaveBalanceReportPage.GoToPage();
-            _testContext.WriteLine(
+            TestContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
             );
 
@@ -201,12 +201,12 @@ public class ReportDataTest : TestBase
         }
         catch (WebException ex)
         {
-            _testContext.WriteLine("Failed to load page due to connection");
+            TestContext.WriteLine("Failed to load page due to connection");
             throw new PreconditionException("Failed to load page due to connection", ex);
         }
         catch (NoSuchElementException ex)
         {
-            _testContext.WriteLine("Failed to find the leave type to delete");
+            TestContext.WriteLine("Failed to find the leave type to delete");
             throw new PreconditionException("Failed to find the leave type to delete", ex);
         }
     }
@@ -218,7 +218,7 @@ public class ReportDataTest : TestBase
             // Navigate to the Leave Types page
             var leaveTypesPage = new LeaveTypesPage(_browser, _baseUrl);
             leaveTypesPage.GoToPage();
-            _testContext.WriteLine("Successfully navigated to the Leave Types page");
+            TestContext.WriteLine("Successfully navigated to the Leave Types page");
 
             // Add a new leave type
             leaveTypesPage.ClickAddButton();
@@ -228,11 +228,11 @@ public class ReportDataTest : TestBase
             var visible = leaveTypesPage.DeleteLeaveTypeButtonIsVisible(leaveTypeName);
             if (visible)
             {
-                _testContext.WriteLine($"Successfully recovered leave type: {leaveTypeName}");
+                TestContext.WriteLine($"Successfully recovered leave type: {leaveTypeName}");
             }
             else
             {
-                _testContext.WriteLine($"Failed to recover the leave type: {leaveTypeName}");
+                TestContext.WriteLine($"Failed to recover the leave type: {leaveTypeName}");
                 throw new PostconditionException(
                     $"Failed to recover the leave type: {leaveTypeName}"
                 );
@@ -240,12 +240,12 @@ public class ReportDataTest : TestBase
         }
         catch (WebException ex)
         {
-            _testContext.WriteLine("Failed to load page due to connection");
+            TestContext.WriteLine("Failed to load page due to connection");
             throw new PostconditionException("Failed to load page due to connection", ex);
         }
         catch (NoSuchElementException ex)
         {
-            _testContext.WriteLine($"Failed to find recovered type: {leaveTypeName}");
+            TestContext.WriteLine($"Failed to find recovered type: {leaveTypeName}");
             throw new PostconditionException($"Failed to find recovered type: {leaveTypeName}", ex);
         }
     }
@@ -260,7 +260,7 @@ public class ReportDataTest : TestBase
             // Navigate to the Leave Types page
             var leaveTypesPage = new LeaveTypesPage(_browser, _baseUrl);
             leaveTypesPage.GoToPage();
-            _testContext.WriteLine("Successfully navigated to the Leave Types page");
+            TestContext.WriteLine("Successfully navigated to the Leave Types page");
 
             // Add a new leave type
             leaveTypesPage.ClickAddButton();
@@ -270,18 +270,18 @@ public class ReportDataTest : TestBase
             var visible = leaveTypesPage.DeleteLeaveTypeButtonIsVisible(newLeaveTypeName);
             if (visible)
             {
-                _testContext.WriteLine("Successfully added a new leave type");
+                TestContext.WriteLine("Successfully added a new leave type");
             }
             else
             {
-                _testContext.WriteLine("Failed to add a new leave type");
+                TestContext.WriteLine("Failed to add a new leave type");
                 throw new PreconditionException("Failed to add a new leave type");
             }
 
             // Navigate to the My Leave Entitlements and Usage Report page
             _myLeaveBalanceReportPage = new MyLeaveBalanceReportPage(_browser, _baseUrl);
             _myLeaveBalanceReportPage.GoToPage();
-            _testContext.WriteLine(
+            TestContext.WriteLine(
                 "Successfully navigated to the My Leave Entitlements and Usage Report page"
             );
 
@@ -289,12 +289,12 @@ public class ReportDataTest : TestBase
         }
         catch (WebException ex)
         {
-            _testContext.WriteLine("Failed to load page due to connection");
+            TestContext.WriteLine("Failed to load page due to connection");
             throw new PreconditionException("Failed to load page due to connection", ex);
         }
         catch (NoSuchElementException ex)
         {
-            _testContext.WriteLine("Failed to find the leave type to add");
+            TestContext.WriteLine("Failed to find the leave type to add");
             throw new PreconditionException("Failed to find the leave type to add", ex);
         }
     }
@@ -306,21 +306,21 @@ public class ReportDataTest : TestBase
             // Navigate to the Leave Types page
             var leaveTypesPage = new LeaveTypesPage(_browser, _baseUrl);
             leaveTypesPage.GoToPage();
-            _testContext.WriteLine("Successfully navigated to the Leave Types page");
+            TestContext.WriteLine("Successfully navigated to the Leave Types page");
 
             // Delete the new Leave Type
             leaveTypesPage.ClickDeleteLeaveTypeButtonByName(leaveTypeName);
             leaveTypesPage.ClickConfirmDeleteButton();
-            _testContext.WriteLine($"Successfully deleted the new leave type: {leaveTypeName}");
+            TestContext.WriteLine($"Successfully deleted the new leave type: {leaveTypeName}");
         }
         catch (WebException ex)
         {
-            _testContext.WriteLine("Failed to load page due to connection");
+            TestContext.WriteLine("Failed to load page due to connection");
             throw new PostconditionException("Failed to load page due to connection", ex);
         }
         catch (NoSuchElementException ex)
         {
-            _testContext.WriteLine($"Failed to find the new leave type to delete: {leaveTypeName}");
+            TestContext.WriteLine($"Failed to find the new leave type to delete: {leaveTypeName}");
             throw new PostconditionException(
                 $"Failed to find the new leave type to delete: {leaveTypeName}",
                 ex
