@@ -10,29 +10,41 @@ phases:
   pre_build:
     commands:
       - echo "Restoring dependencies..."
-      - dotnet restore ApiTestFramework/ApiTestFramework.csproj
+      - dotnet restore $TEST_PROJECT/$TEST_PROJECT.csproj
       - dotnet restore TestCore/TestCore.csproj
 
   build:
     commands:
+      - echo "Setting build configuration..."
+      - |
+        if [ "$TEST_ENVIRONMENT" = "Production" ]; then
+          echo "TEST_CONFIGURATION=Release" > testconfig.env
+        elif [ "$TEST_ENVIRONMENT" = "QA" ]; then
+          echo "TEST_CONFIGURATION=QA" > testconfig.env
+        else
+          echo "TEST_CONFIGURATION=Debug" > testconfig.env
+        fi
+
       - echo "Building TestCore..."
-      - dotnet build TestCore/TestCore.csproj --no-incremental --configuration Release
-      - echo "Building ApiTestFramework..."
-      - dotnet build ApiTestFramework/ApiTestFramework.csproj --no-incremental --configuration Release
+      - source testconfig.env
+      - dotnet build TestCore/TestCore.csproj --no-incremental --configuration $TEST_CONFIGURATION
+      - echo "Building $TEST_PROJECT..."
+      - dotnet build $TEST_PROJECT/$TEST_PROJECT.csproj --no-incremental --configuration $TEST_CONFIGURATION
 
   post_build:
     commands:
       - echo "Running tests..."
+      - source testconfig.env
       - |
         dotnet test \
-          --settings ${TEST_DIRECTORY}/.runsettings \
+          --settings $TEST_PROJECT/.runsettings \
           --logger "trx;LogFileName=TestResults.trx" \
-          --filter API \
-          --configuration Release
+          --filter $TEST_FILTER \
+          --configuration $TEST_CONFIGURATION
 
 artifacts:
   files:
-    - 'ApiTestFramework/bin/Release/**/*'
+    - '$TEST_PROJECT/bin/**/TestResults/**/*'
   discard-paths: no
   base-directory: .
   name: artifact-$(date +%Y-%m-%d)
@@ -41,12 +53,10 @@ cache:
   paths:
     - '!**/bin/Debug/**'
     - '!**/obj/Debug/**'
-    - ApiTestFramework/bin
-    - ApiTestFramework/obj
+    - $TEST_PROJECT/bin
+    - $TEST_PROJECT/obj
     - TestCore/bin
     - TestCore/obj
   type: LOCAL
   modes:
     - LOCAL_CUSTOM_CACHE
-  override:
-    key: $CODEBUILD_SRC_DIR-${{ md5sum(ApiTestFramework/ApiTestFramework.csproj TestCore/TestCore.csproj) }}

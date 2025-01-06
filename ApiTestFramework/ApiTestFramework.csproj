@@ -20,6 +20,7 @@
     <EnvironmentName Condition="'$(TEST_ENVIRONMENT)' == ''">Development</EnvironmentName>
     <EnvironmentName Condition="'$(TEST_ENVIRONMENT)' == 'Development'">Development</EnvironmentName>
     <EnvironmentName Condition="'$(TEST_ENVIRONMENT)' == 'Production'">Production</EnvironmentName>
+    <EnvironmentName Condition="'$(TEST_ENVIRONMENT)' == 'QA'">QA</EnvironmentName>
   </PropertyGroup>
 
   <ItemGroup>

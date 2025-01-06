@@ -10,10 +10,7 @@ on:
 
 jobs:
   test:
-    environment: Production
     env:
-      TEST_PROJECT: SeleniumTestFramework
-      TEST_FILTER: SELENIUM
       TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
     runs-on: ubuntu-24.04
@@ -21,20 +18,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set configuration based on environment
+        run: |
+          if [ "${{ vars.TEST_ENVIRONMENT }}" = "Production" ]; then
+            echo "TEST_CONFIGURATION=Release" >> $GITHUB_ENV
+          elif [ "${{ vars.TEST_ENVIRONMENT }}" = "QA" ]; then
+            echo "TEST_CONFIGURATION=QA" >> $GITHUB_ENV
+          else
+            echo "TEST_CONFIGURATION=Debug" >> $GITHUB_ENV
+          fi
+          echo "Configuration set to $TEST_CONFIGURATION"
+
       - name: Restore dependencies and build
         run: |
           dotnet restore TestCore/TestCore.csproj
-          dotnet restore ${{ env.TEST_PROJECT }}/${{ env.TEST_PROJECT }}.csproj
-          dotnet build TestCore/TestCore.csproj --no-incremental --configuration Release
-          dotnet build ${{ env.TEST_PROJECT }}/${{ env.TEST_PROJECT }}.csproj --no-incremental --configuration Release
+          dotnet restore ${{ vars.TEST_PROJECT }}/${{ vars.TEST_PROJECT }}.csproj
+          dotnet build TestCore/TestCore.csproj --no-incremental --configuration $TEST_CONFIGURATION
+          dotnet build ${{ vars.TEST_PROJECT }}/${{ vars.TEST_PROJECT }}.csproj --no-incremental --configuration $TEST_CONFIGURATION
 
       - name: Run tests and generate reports
         run: |
           dotnet test \
-            --settings ${{ env.TEST_PROJECT }}/.runsettings \
+            --settings ${{ vars.TEST_PROJECT }}/.runsettings \
             --logger "trx;LogFileName=TestResults.trx" \
-            --filter ${{ env.TEST_FILTER }} \
-            --configuration Release
+            --filter ${{ vars.TEST_FILTER }} \
+            --configuration $TEST_CONFIGURATION
 
       - name: Load test report history
         uses: actions/checkout@v4
@@ -50,7 +58,7 @@ jobs:
         with:
           gh_pages: gh-pages
           allure_history: allure-history
-          allure_results: ${{ env.TEST_PROJECT }}/TestResults
+          allure_results: ${{ vars.TEST_PROJECT }}/TestResults
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
